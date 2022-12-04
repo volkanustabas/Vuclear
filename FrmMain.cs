@@ -33,14 +33,16 @@ namespace Vuclear
 
         private void EnabledFalse()
         {
-            tc_01.Enabled = false;
             btn_clear.Enabled = false;
+            clb_clear.Enabled = false;
+            clb_installApplication.Enabled = false;
         }
 
         private void EnabledTrue()
         {
-            tc_01.Enabled = true;
             btn_clear.Enabled = true;
+            clb_clear.Enabled = true;
+            clb_installApplication.Enabled = true;
         }
 
         private bool ControlCheckbox()
@@ -228,15 +230,78 @@ namespace Vuclear
                     var installGreenshot = @"winget install --id=Greenshot.Greenshot -e";
                     ExecuteCommand(installGreenshot, "Greenshot installed.", rtb_log);
                 }
-                else if (item.ToString() == "Vlc Player")
+                else if (item.ToString() == "VLC Player")
                 {
                     var installVlcPlayer = @"winget install --id=VideoLAN.VLC -e";
-                    ExecuteCommand(installVlcPlayer, "Vlc Player installed.", rtb_log);
+                    ExecuteCommand(installVlcPlayer, "VLC Player installed.", rtb_log);
                 }
                 else if (item.ToString() == "Notepad++")
                 {
                     var installNotepadPlusPlus = @"winget install --id=Notepad++.Notepad++ -e";
                     ExecuteCommand(installNotepadPlusPlus, "Notepad++ installed.", rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x64)")
+                {
+                    var installMicrosoftVcRedistX64 = @"winget install -e --id Microsoft.VC++2015-2022Redist-x64";
+                    ExecuteCommand(installMicrosoftVcRedistX64, "Microsoft VC++ 2015-2022 Redist-x64 installed.",
+                        rtb_log);
+                }
+
+                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x86)")
+                {
+                    var installMicrosoftVcRedistX86 = @"winget install -e --id Microsoft.VC++2015-2022Redist-x86";
+                    ExecuteCommand(installMicrosoftVcRedistX86, "Microsoft VC++ 2015-2022 Redist-x86 installed.",
+                        rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Edge")
+                {
+                    var installMicrosoftEdge = @"winget install -e --id Microsoft.Edge";
+                    ExecuteCommand(installMicrosoftEdge, "Microsoft Edge installed.", rtb_log);
+                }
+                else if (item.ToString() == "Libre Office")
+                {
+                    var installLibreOffice = @"winget install -e --id TheDocumentFoundation.LibreOffice";
+                    ExecuteCommand(installLibreOffice, "Libre Office installed.", rtb_log);
+                }
+                else if (item.ToString() == "ShareX")
+                {
+                    var installShareX = @"winget install -e --id ShareX.ShareX";
+                    ExecuteCommand(installShareX, "ShareX installed.", rtb_log);
+                }
+                else if (item.ToString() == "ImageGlass")
+                {
+                    var installImageGlass = @"winget install -e --id DuongDieuPhap.ImageGlass";
+                    ExecuteCommand(installImageGlass, "ImageGlass installed.", rtb_log);
+                }
+                else if (item.ToString() == "qBittorrent")
+                {
+                    var installQbittorrent = @"winget install -e --id qBittorrent.qBittorrent";
+                    ExecuteCommand(installQbittorrent, "qBittorrent installed.", rtb_log);
+                }
+                else if (item.ToString() == "Discord")
+                {
+                    var installDiscord = @"winget install -e --id Discord.Discord";
+                    ExecuteCommand(installDiscord, "Discord installed.", rtb_log);
+                }
+                else if (item.ToString() == "Steam")
+                {
+                    var installSteam = @"winget install -e --id Valve.Steam";
+                    ExecuteCommand(installSteam, "Steam installed.", rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Visual Studio Code")
+                {
+                    var installMicrosoftVisualStudioCode = @"winget install -e --id Microsoft.VisualStudioCode";
+                    ExecuteCommand(installMicrosoftVisualStudioCode, "Microsoft Visual Studio Code installed.", rtb_log);
+                }
+                else if (item.ToString() == "Spotify")
+                {
+                    var installSpotify = @"winget install -e --id Spotify.Spotify";
+                    ExecuteCommand(installSpotify, "Spotify installed.", rtb_log);
+                }
+                else if (item.ToString() == "Java Runtime Environment")
+                {
+                    var installJavaRuntime = @"winget install -e --id Oracle.JavaRuntimeEnvironment";
+                    ExecuteCommand(installJavaRuntime, "Java Runtime Environment installed.", rtb_log);
                 }
         }
 
@@ -249,8 +314,6 @@ namespace Vuclear
             }
             else
             {
-                MessageBoxHelper.PrepToCenterMessageBoxOnForm(this);
-
                 MessageBox.Show(@"You must choose at least one option!", @"Info",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -272,17 +335,7 @@ namespace Vuclear
         private void bw_clear_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             pb_loading.Visible = false;
-
-            MessageBoxHelper.PrepToCenterMessageBoxOnForm(this);
-
-            var result = MessageBox.Show(@"The selections have been deleted. Do you want to close?", @"Info",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (result == DialogResult.No)
-                EnabledTrue();
-            else
-                Application.Exit();
+            EnabledTrue();
         }
 
         private void tc_01_SelectedIndexChanged(object sender, EventArgs e)
@@ -333,8 +386,6 @@ namespace Vuclear
             }
         }
 
-        
-
         #region INFO
 
         public class Computer
@@ -346,6 +397,7 @@ namespace Vuclear
             public string Model { get; set; }
             public string Processor { get; set; }
             public string Ram { get; set; }
+            public string Bios { get; set; }
         }
 
         #region INFO_FillData
@@ -354,11 +406,12 @@ namespace Vuclear
         {
             var computer = new Computer
             {
-                InstallDate = OsInstallDate(),
-                Os = Os("127.0.0.1"),
-                Model = BrandAndModel("127.0.0.1"),
-                Processor = Processor("127.0.0.1"),
-                Ram = Ram("127.0.0.1")
+                InstallDate = GetOsInstallDate(),
+                Os = GetOs("127.0.0.1"),
+                Model = GetBrandAndModel("127.0.0.1"),
+                Processor = GetProcessor("127.0.0.1"),
+                Ram = GetRam("127.0.0.1"),
+                Bios = GetBiosDetail()
             };
 
             rtb_info.AppendText("Computer Name: " + Environment.MachineName + Environment.NewLine);
@@ -368,11 +421,39 @@ namespace Vuclear
             rtb_info.AppendText("Brand / Model: " + computer.Model + Environment.NewLine);
             rtb_info.AppendText("Processor: " + computer.Processor + Environment.NewLine);
             rtb_info.AppendText("Ram: " + computer.Ram + Environment.NewLine);
+            rtb_info.AppendText("Bios: " + computer.Bios + Environment.NewLine);
         }
 
         #endregion
 
-        public static DateTime OsInstallDate()
+        public static string GetBiosDetail()
+        {
+            try
+            {
+                var mSearcher =
+                    new ManagementObjectSearcher("SELECT SerialNumber, SMBIOSBIOSVersion, ReleaseDate FROM Win32_BIOS");
+                var collection = mSearcher.Get();
+                foreach (var o in collection)
+                {
+                    var obj = (ManagementObject) o;
+                    var releaseDt = (string) obj["ReleaseDate"];
+                    var dt = ManagementDateTimeConverter.ToDateTime(releaseDt);
+                    var biosDateConvert = dt.ToString("yyyy.MM.dd");
+
+                    var biosDetail =@"v"+ (string) obj["SMBIOSBIOSVersion"] + @" - " + biosDateConvert;
+
+                    return biosDetail;
+                }
+            }
+            catch (Exception ex)
+            {
+                return "Exception: " + ex;
+            }
+
+            return null;
+        }
+
+        public static DateTime GetOsInstallDate()
         {
             var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 
@@ -392,7 +473,7 @@ namespace Vuclear
             return DateTime.Today;
         }
 
-        public static string Os(string ipAdressForOs)
+        public static string GetOs(string ipAdressForOs)
         {
             try
             {
@@ -429,7 +510,7 @@ namespace Vuclear
             return "null";
         }
 
-        public static string BrandAndModel(string ipAdressForBrandAndModel)
+        public static string GetBrandAndModel(string ipAdressForBrandAndModel)
         {
             try
             {
@@ -465,7 +546,7 @@ namespace Vuclear
             return "null";
         }
 
-        public static string Processor(string ipAdressForProcessor)
+        public static string GetProcessor(string ipAdressForProcessor)
         {
             try
             {
@@ -500,7 +581,7 @@ namespace Vuclear
             return "null";
         }
 
-        public static string Ram(string ipAdressForRam)
+        public static string GetRam(string ipAdressForRam)
         {
             try
             {
@@ -523,7 +604,7 @@ namespace Vuclear
                     {
                         var m = (ManagementObject) managementBaseObject;
                         if (m["Capacity"] != null)
-                            totalMemory += (ulong)m["Capacity"];
+                            totalMemory += (ulong) m["Capacity"];
                     }
 
                     var ramInfo = KbMbGbTbConvert.ByteToStringForInfo(totalMemory) + @" (" +
@@ -543,30 +624,25 @@ namespace Vuclear
 
             return "null";
         }
+
         public class KbMbGbTbConvert
         {
-            public static string ByteToString(UInt64 bytes)
+            public static string ByteToString(ulong bytes)
             {
-                string[] Suffix = { "bytes", "KB", "GB", "TB" };
+                string[] Suffix = {"bytes", "KB", "GB", "TB"};
                 int i;
                 double dblSByte = bytes;
-                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
-                {
-                    dblSByte = bytes / 1024.0;
-                }
+                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
 
                 return $"{dblSByte:0.#} {Suffix[i]}";
             }
 
-            public static string ByteToStringForInfo(UInt64 bytes)
+            public static string ByteToStringForInfo(ulong bytes)
             {
-                string[] Suffix = { "bytes", "KB", "MB", "GB", "TB" };
+                string[] Suffix = {"bytes", "KB", "MB", "GB", "TB"};
                 int i;
                 double dblSByte = bytes;
-                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
-                {
-                    dblSByte = bytes / 1024.0;
-                }
+                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
 
                 return $"{dblSByte:0.#} {Suffix[i]}";
             }

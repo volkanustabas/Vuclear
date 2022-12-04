@@ -34,18 +34,21 @@
             this.pb_loading = new System.Windows.Forms.PictureBox();
             this.tc_01 = new System.Windows.Forms.TabControl();
             this.tp_clear = new System.Windows.Forms.TabPage();
+            this.clb_clear = new System.Windows.Forms.CheckedListBox();
             this.tp_tweak = new System.Windows.Forms.TabPage();
             this.rtb_tweak_details = new System.Windows.Forms.RichTextBox();
             this.cb_tweak = new System.Windows.Forms.CheckBox();
             this.tp_installApplication = new System.Windows.Forms.TabPage();
             this.clb_installApplication = new System.Windows.Forms.CheckedListBox();
             this.rtb_log = new System.Windows.Forms.RichTextBox();
-            this.clb_clear = new System.Windows.Forms.CheckedListBox();
+            this.tp_info = new System.Windows.Forms.TabPage();
+            this.rtb_info = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).BeginInit();
             this.tc_01.SuspendLayout();
             this.tp_clear.SuspendLayout();
             this.tp_tweak.SuspendLayout();
             this.tp_installApplication.SuspendLayout();
+            this.tp_info.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_clear
@@ -76,6 +79,7 @@
             // 
             // tc_01
             // 
+            this.tc_01.Controls.Add(this.tp_info);
             this.tc_01.Controls.Add(this.tp_clear);
             this.tc_01.Controls.Add(this.tp_tweak);
             this.tc_01.Controls.Add(this.tp_installApplication);
@@ -96,6 +100,23 @@
             this.tp_clear.TabIndex = 0;
             this.tp_clear.Text = "Clear";
             this.tp_clear.UseVisualStyleBackColor = true;
+            // 
+            // clb_clear
+            // 
+            this.clb_clear.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clb_clear.FormattingEnabled = true;
+            this.clb_clear.Items.AddRange(new object[] {
+            "Clear Application History",
+            "Clear Browser History",
+            "Clear Credential Cache",
+            "Clear Temp",
+            "Clear Windows Logs Caches",
+            "Empty Trash Bin"});
+            this.clb_clear.Location = new System.Drawing.Point(3, 3);
+            this.clb_clear.Name = "clb_clear";
+            this.clb_clear.Size = new System.Drawing.Size(356, 198);
+            this.clb_clear.Sorted = true;
+            this.clb_clear.TabIndex = 0;
             // 
             // tp_tweak
             // 
@@ -168,22 +189,27 @@
             this.rtb_log.TabIndex = 9;
             this.rtb_log.Text = "";
             // 
-            // clb_clear
+            // tp_info
             // 
-            this.clb_clear.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.clb_clear.FormattingEnabled = true;
-            this.clb_clear.Items.AddRange(new object[] {
-            "Clear Application History",
-            "Clear Browser History",
-            "Clear Credential Cache",
-            "Clear Temp",
-            "Clear Windows Logs Caches",
-            "Empty Trash Bin"});
-            this.clb_clear.Location = new System.Drawing.Point(3, 3);
-            this.clb_clear.Name = "clb_clear";
-            this.clb_clear.Size = new System.Drawing.Size(356, 198);
-            this.clb_clear.Sorted = true;
-            this.clb_clear.TabIndex = 0;
+            this.tp_info.Controls.Add(this.rtb_info);
+            this.tp_info.Location = new System.Drawing.Point(4, 22);
+            this.tp_info.Name = "tp_info";
+            this.tp_info.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_info.Size = new System.Drawing.Size(362, 204);
+            this.tp_info.TabIndex = 3;
+            this.tp_info.Text = "Info";
+            this.tp_info.UseVisualStyleBackColor = true;
+            // 
+            // rtb_info
+            // 
+            this.rtb_info.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtb_info.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.rtb_info.Location = new System.Drawing.Point(3, 3);
+            this.rtb_info.Name = "rtb_info";
+            this.rtb_info.ReadOnly = true;
+            this.rtb_info.Size = new System.Drawing.Size(356, 198);
+            this.rtb_info.TabIndex = 0;
+            this.rtb_info.Text = "";
             // 
             // FrmMain
             // 
@@ -200,13 +226,15 @@
             this.MinimumSize = new System.Drawing.Size(410, 385);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Vuclear [v1.0.0.7]";
+            this.Text = "Vuclear [v1.0.0.8]";
+            this.Load += new System.EventHandler(this.FrmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).EndInit();
             this.tc_01.ResumeLayout(false);
             this.tp_clear.ResumeLayout(false);
             this.tp_tweak.ResumeLayout(false);
             this.tp_tweak.PerformLayout();
             this.tp_installApplication.ResumeLayout(false);
+            this.tp_info.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -224,6 +252,8 @@
         private System.Windows.Forms.CheckedListBox clb_installApplication;
         private System.Windows.Forms.RichTextBox rtb_log;
         private System.Windows.Forms.CheckedListBox clb_clear;
+        private System.Windows.Forms.TabPage tp_info;
+        private System.Windows.Forms.RichTextBox rtb_info;
     }
 }
 

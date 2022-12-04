@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Vuclear.Properties;
 
 namespace Vuclear
@@ -22,6 +24,11 @@ namespace Vuclear
             CheckForIllegalCrossThreadCalls = false;
             pb_loading.Visible = false;
             _tpClear = true;
+        }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            InfoFillData();
         }
 
         private void EnabledFalse()
@@ -50,7 +57,6 @@ namespace Vuclear
 
         private void ClearOptions()
         {
-
             foreach (var item in clb_clear.CheckedItems)
 
                 if (item.ToString() == "Clear Application History")
@@ -326,5 +332,246 @@ namespace Vuclear
                 rtbLog.AppendText(objException + Environment.NewLine);
             }
         }
+
+        
+
+        #region INFO
+
+        public class Computer
+        {
+            public string Name { get; set; }
+            public string Username { get; set; }
+            public DateTime InstallDate { get; set; }
+            public string Os { get; set; }
+            public string Model { get; set; }
+            public string Processor { get; set; }
+            public string Ram { get; set; }
+        }
+
+        #region INFO_FillData
+
+        public void InfoFillData()
+        {
+            var computer = new Computer
+            {
+                InstallDate = OsInstallDate(),
+                Os = Os("127.0.0.1"),
+                Model = BrandAndModel("127.0.0.1"),
+                Processor = Processor("127.0.0.1"),
+                Ram = Ram("127.0.0.1")
+            };
+
+            rtb_info.AppendText("Computer Name: " + Environment.MachineName + Environment.NewLine);
+            rtb_info.AppendText("Username: " + Environment.UserName + Environment.NewLine);
+            rtb_info.AppendText("OS: " + computer.Os + Environment.NewLine);
+            rtb_info.AppendText("OS Install Date: " + computer.InstallDate + Environment.NewLine);
+            rtb_info.AppendText("Brand / Model: " + computer.Model + Environment.NewLine);
+            rtb_info.AppendText("Processor: " + computer.Processor + Environment.NewLine);
+            rtb_info.AppendText("Ram: " + computer.Ram + Environment.NewLine);
+        }
+
+        #endregion
+
+        public static DateTime OsInstallDate()
+        {
+            var key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            key = key.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", false);
+            if (key != null)
+            {
+                var startDate = new DateTime(1970, 1, 1, 0, 0, 0);
+                var objValue = key.GetValue("InstallDate");
+                var stringValue = objValue.ToString();
+                var regVal = Convert.ToInt64(stringValue);
+
+                var installDate = startDate.AddSeconds(regVal);
+
+                return installDate;
+            }
+
+            return DateTime.Today;
+        }
+
+        public static string Os(string ipAdressForOs)
+        {
+            try
+            {
+                var connection = new ConnectionOptions();
+
+                var scope = new ManagementScope("\\\\" + ipAdressForOs + "\\root\\CIMV2", connection);
+                scope.Connect();
+
+                var query = new ObjectQuery(
+                    "SELECT * FROM Win32_OperatingSystem");
+
+                var searcher =
+                    new ManagementObjectSearcher(scope, query);
+
+                foreach (var o in searcher.Get())
+                {
+                    var queryObj = (ManagementObject) o;
+                    var osInstallDateConvert =
+                        ManagementDateTimeConverter.ToDateTime(queryObj["InstallDate"].ToString());
+
+                    var os = queryObj["Caption"] + @" " + queryObj["BuildNumber"];
+                    return os;
+                }
+            }
+            catch (ManagementException)
+            {
+                return "Error: Connection issue";
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return "Error: UnauthorizedAccess";
+            }
+
+            return "null";
+        }
+
+        public static string BrandAndModel(string ipAdressForBrandAndModel)
+        {
+            try
+            {
+                var connection = new ConnectionOptions();
+
+                var scope = new ManagementScope("\\\\" + ipAdressForBrandAndModel + "\\root\\CIMV2", connection);
+                scope.Connect();
+
+                var query = new ObjectQuery(
+                    "SELECT * FROM Win32_ComputerSystem");
+
+                var searcher =
+                    new ManagementObjectSearcher(scope, query);
+
+                foreach (var o in searcher.Get())
+                {
+                    var queryObj = (ManagementObject) o;
+                    var brandModelName = queryObj["Manufacturer"] + @" / " + queryObj["Model"];
+
+
+                    return brandModelName;
+                }
+            }
+            catch (ManagementException)
+            {
+                return "Error: Connection issue";
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return "Error: UnauthorizedAccess";
+            }
+
+            return "null";
+        }
+
+        public static string Processor(string ipAdressForProcessor)
+        {
+            try
+            {
+                var connection = new ConnectionOptions();
+
+                var scope = new ManagementScope("\\\\" + ipAdressForProcessor + "\\root\\CIMV2", connection);
+                scope.Connect();
+
+                var query = new ObjectQuery(
+                    "SELECT * FROM Win32_Processor");
+
+                var searcher =
+                    new ManagementObjectSearcher(scope, query);
+
+                foreach (var o in searcher.Get())
+                {
+                    var queryObj = (ManagementObject) o;
+                    var processorModel = queryObj["Name"].ToString();
+
+                    return processorModel;
+                }
+            }
+            catch (ManagementException)
+            {
+                return "Error: Connection issue";
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return "Error: UnauthorizedAccess";
+            }
+
+            return "null";
+        }
+
+        public static string Ram(string ipAdressForRam)
+        {
+            try
+            {
+                var connection = new ConnectionOptions();
+
+                var scope = new ManagementScope("\\\\" + ipAdressForRam + "\\root\\CIMV2", connection);
+                scope.Connect();
+
+                var query = new ObjectQuery(
+                    "SELECT Capacity,PartNumber FROM Win32_PhysicalMemory");
+
+                var searcher =
+                    new ManagementObjectSearcher(scope, query);
+
+                foreach (var o in searcher.Get())
+                {
+                    var queryObj = (ManagementObject) o;
+                    ulong totalMemory = 0;
+                    foreach (var managementBaseObject in searcher.Get())
+                    {
+                        var m = (ManagementObject) managementBaseObject;
+                        if (m["Capacity"] != null)
+                            totalMemory += (ulong)m["Capacity"];
+                    }
+
+                    var ramInfo = KbMbGbTbConvert.ByteToStringForInfo(totalMemory) + @" (" +
+                                  queryObj["PartNumber"].ToString().Trim() + @")";
+
+                    return ramInfo;
+                }
+            }
+            catch (ManagementException)
+            {
+                return "Error: Connection issue";
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return "Error: UnauthorizedAccess";
+            }
+
+            return "null";
+        }
+        public class KbMbGbTbConvert
+        {
+            public static string ByteToString(UInt64 bytes)
+            {
+                string[] Suffix = { "bytes", "KB", "GB", "TB" };
+                int i;
+                double dblSByte = bytes;
+                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+                {
+                    dblSByte = bytes / 1024.0;
+                }
+
+                return $"{dblSByte:0.#} {Suffix[i]}";
+            }
+
+            public static string ByteToStringForInfo(UInt64 bytes)
+            {
+                string[] Suffix = { "bytes", "KB", "MB", "GB", "TB" };
+                int i;
+                double dblSByte = bytes;
+                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024)
+                {
+                    dblSByte = bytes / 1024.0;
+                }
+
+                return $"{dblSByte:0.#} {Suffix[i]}";
+            }
+        }
+
+        #endregion
     }
 }

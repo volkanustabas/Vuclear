@@ -101,6 +101,8 @@
   <ItemGroup>
     <Content Include="icon.ico" />
     <Content Include="ss_vuclear.png" />
+    <None Include="Resources\loading.gif" />
+    <None Include="Resources\loading1.gif" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

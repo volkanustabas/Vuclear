@@ -31,33 +31,42 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.btn_clear = new System.Windows.Forms.Button();
             this.bw_clear = new System.ComponentModel.BackgroundWorker();
-            this.pb_loading = new System.Windows.Forms.PictureBox();
             this.tc_01 = new System.Windows.Forms.TabControl();
             this.tp_info = new System.Windows.Forms.TabPage();
             this.rtb_info = new System.Windows.Forms.RichTextBox();
             this.tp_clear = new System.Windows.Forms.TabPage();
             this.clb_clear = new System.Windows.Forms.CheckedListBox();
             this.tp_tweak = new System.Windows.Forms.TabPage();
+            this.tlp_tweak = new System.Windows.Forms.TableLayoutPanel();
             this.rtb_tweak_details = new System.Windows.Forms.RichTextBox();
             this.cb_tweak = new System.Windows.Forms.CheckBox();
             this.tp_installApplication = new System.Windows.Forms.TabPage();
             this.clb_installApplication = new System.Windows.Forms.CheckedListBox();
             this.rtb_log = new System.Windows.Forms.RichTextBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).BeginInit();
+            this.tlp_main = new System.Windows.Forms.TableLayoutPanel();
+            this.tlp_footer = new System.Windows.Forms.TableLayoutPanel();
+            this.tlp_loading = new System.Windows.Forms.TableLayoutPanel();
+            this.pb_loading = new System.Windows.Forms.PictureBox();
             this.tc_01.SuspendLayout();
             this.tp_info.SuspendLayout();
             this.tp_clear.SuspendLayout();
             this.tp_tweak.SuspendLayout();
+            this.tlp_tweak.SuspendLayout();
             this.tp_installApplication.SuspendLayout();
+            this.tlp_main.SuspendLayout();
+            this.tlp_footer.SuspendLayout();
+            this.tlp_loading.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).BeginInit();
             this.SuspendLayout();
             // 
             // btn_clear
             // 
-            this.btn_clear.BackgroundImage = global::Vuclear.Properties.Resources.image_clear;
+            this.btn_clear.BackgroundImage = global::Vuclear.Properties.Resources.run;
             this.btn_clear.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_clear.Location = new System.Drawing.Point(535, 360);
+            this.btn_clear.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btn_clear.Location = new System.Drawing.Point(561, 3);
             this.btn_clear.Name = "btn_clear";
-            this.btn_clear.Size = new System.Drawing.Size(73, 69);
+            this.btn_clear.Size = new System.Drawing.Size(94, 88);
             this.btn_clear.TabIndex = 2;
             this.btn_clear.UseVisualStyleBackColor = true;
             this.btn_clear.Click += new System.EventHandler(this.btn_clear_Click);
@@ -67,27 +76,18 @@
             this.bw_clear.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bw_clear_DoWork);
             this.bw_clear.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bw_clear_RunWorkerCompleted);
             // 
-            // pb_loading
-            // 
-            this.pb_loading.Image = global::Vuclear.Properties.Resources.image_loading;
-            this.pb_loading.Location = new System.Drawing.Point(535, 360);
-            this.pb_loading.Name = "pb_loading";
-            this.pb_loading.Size = new System.Drawing.Size(73, 69);
-            this.pb_loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pb_loading.TabIndex = 7;
-            this.pb_loading.TabStop = false;
-            // 
             // tc_01
             // 
             this.tc_01.Controls.Add(this.tp_info);
             this.tc_01.Controls.Add(this.tp_clear);
             this.tc_01.Controls.Add(this.tp_tweak);
             this.tc_01.Controls.Add(this.tp_installApplication);
+            this.tc_01.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tc_01.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.tc_01.Location = new System.Drawing.Point(12, 12);
+            this.tc_01.Location = new System.Drawing.Point(3, 3);
             this.tc_01.Name = "tc_01";
             this.tc_01.SelectedIndex = 0;
-            this.tc_01.Size = new System.Drawing.Size(600, 342);
+            this.tc_01.Size = new System.Drawing.Size(658, 385);
             this.tc_01.TabIndex = 8;
             this.tc_01.SelectedIndexChanged += new System.EventHandler(this.tc_01_SelectedIndexChanged);
             // 
@@ -96,8 +96,8 @@
             this.tp_info.Controls.Add(this.rtb_info);
             this.tp_info.Location = new System.Drawing.Point(4, 28);
             this.tp_info.Name = "tp_info";
-            this.tp_info.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tp_info.Size = new System.Drawing.Size(592, 310);
+            this.tp_info.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_info.Size = new System.Drawing.Size(650, 353);
             this.tp_info.TabIndex = 3;
             this.tp_info.Text = "Info";
             this.tp_info.UseVisualStyleBackColor = true;
@@ -110,7 +110,7 @@
             this.rtb_info.Location = new System.Drawing.Point(3, 3);
             this.rtb_info.Name = "rtb_info";
             this.rtb_info.ReadOnly = true;
-            this.rtb_info.Size = new System.Drawing.Size(586, 304);
+            this.rtb_info.Size = new System.Drawing.Size(644, 347);
             this.rtb_info.TabIndex = 0;
             this.rtb_info.Text = "";
             // 
@@ -119,8 +119,8 @@
             this.tp_clear.Controls.Add(this.clb_clear);
             this.tp_clear.Location = new System.Drawing.Point(4, 28);
             this.tp_clear.Name = "tp_clear";
-            this.tp_clear.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tp_clear.Size = new System.Drawing.Size(592, 310);
+            this.tp_clear.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_clear.Size = new System.Drawing.Size(650, 313);
             this.tp_clear.TabIndex = 0;
             this.tp_clear.Text = "Clear";
             this.tp_clear.UseVisualStyleBackColor = true;
@@ -141,33 +141,46 @@
             "Empty Trash Bin"});
             this.clb_clear.Location = new System.Drawing.Point(3, 3);
             this.clb_clear.Name = "clb_clear";
-            this.clb_clear.Size = new System.Drawing.Size(586, 304);
+            this.clb_clear.Size = new System.Drawing.Size(644, 307);
             this.clb_clear.Sorted = true;
             this.clb_clear.TabIndex = 0;
             // 
             // tp_tweak
             // 
-            this.tp_tweak.Controls.Add(this.rtb_tweak_details);
-            this.tp_tweak.Controls.Add(this.cb_tweak);
+            this.tp_tweak.Controls.Add(this.tlp_tweak);
             this.tp_tweak.Location = new System.Drawing.Point(4, 28);
             this.tp_tweak.Name = "tp_tweak";
-            this.tp_tweak.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tp_tweak.Size = new System.Drawing.Size(592, 310);
+            this.tp_tweak.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_tweak.Size = new System.Drawing.Size(650, 313);
             this.tp_tweak.TabIndex = 1;
             this.tp_tweak.Text = "Tweak";
             this.tp_tweak.UseVisualStyleBackColor = true;
             // 
+            // tlp_tweak
+            // 
+            this.tlp_tweak.ColumnCount = 1;
+            this.tlp_tweak.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_tweak.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlp_tweak.Controls.Add(this.rtb_tweak_details, 0, 1);
+            this.tlp_tweak.Controls.Add(this.cb_tweak, 0, 0);
+            this.tlp_tweak.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlp_tweak.Location = new System.Drawing.Point(3, 3);
+            this.tlp_tweak.Name = "tlp_tweak";
+            this.tlp_tweak.RowCount = 2;
+            this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_tweak.Size = new System.Drawing.Size(644, 307);
+            this.tlp_tweak.TabIndex = 0;
+            // 
             // rtb_tweak_details
             // 
-            this.rtb_tweak_details.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.rtb_tweak_details.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(234)))));
+            this.rtb_tweak_details.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtb_tweak_details.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.rtb_tweak_details.Location = new System.Drawing.Point(7, 35);
+            this.rtb_tweak_details.Location = new System.Drawing.Point(3, 53);
             this.rtb_tweak_details.Name = "rtb_tweak_details";
             this.rtb_tweak_details.ReadOnly = true;
-            this.rtb_tweak_details.Size = new System.Drawing.Size(579, 275);
+            this.rtb_tweak_details.Size = new System.Drawing.Size(638, 251);
             this.rtb_tweak_details.TabIndex = 2;
             this.rtb_tweak_details.Text = resources.GetString("rtb_tweak_details.Text");
             // 
@@ -175,7 +188,7 @@
             // 
             this.cb_tweak.AutoSize = true;
             this.cb_tweak.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.cb_tweak.Location = new System.Drawing.Point(7, 6);
+            this.cb_tweak.Location = new System.Drawing.Point(3, 3);
             this.cb_tweak.Name = "cb_tweak";
             this.cb_tweak.Size = new System.Drawing.Size(262, 23);
             this.cb_tweak.TabIndex = 1;
@@ -187,8 +200,8 @@
             this.tp_installApplication.Controls.Add(this.clb_installApplication);
             this.tp_installApplication.Location = new System.Drawing.Point(4, 28);
             this.tp_installApplication.Name = "tp_installApplication";
-            this.tp_installApplication.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tp_installApplication.Size = new System.Drawing.Size(592, 310);
+            this.tp_installApplication.Padding = new System.Windows.Forms.Padding(3);
+            this.tp_installApplication.Size = new System.Drawing.Size(650, 313);
             this.tp_installApplication.TabIndex = 2;
             this.tp_installApplication.Text = "Install Application";
             this.tp_installApplication.UseVisualStyleBackColor = true;
@@ -206,7 +219,6 @@
             "7-zip",
             "Discord",
             "Google Chrome",
-            "Greenshot",
             "ImageGlass",
             "Java Runtime Environment",
             "Libre Office",
@@ -223,44 +235,104 @@
             this.clb_installApplication.Location = new System.Drawing.Point(3, 3);
             this.clb_installApplication.Name = "clb_installApplication";
             this.clb_installApplication.ScrollAlwaysVisible = true;
-            this.clb_installApplication.Size = new System.Drawing.Size(586, 304);
+            this.clb_installApplication.Size = new System.Drawing.Size(644, 307);
             this.clb_installApplication.Sorted = true;
             this.clb_installApplication.TabIndex = 0;
             // 
             // rtb_log
             // 
+            this.rtb_log.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rtb_log.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.rtb_log.Location = new System.Drawing.Point(12, 360);
+            this.rtb_log.Location = new System.Drawing.Point(3, 3);
             this.rtb_log.Name = "rtb_log";
             this.rtb_log.ReadOnly = true;
-            this.rtb_log.Size = new System.Drawing.Size(517, 69);
+            this.rtb_log.Size = new System.Drawing.Size(552, 88);
             this.rtb_log.TabIndex = 9;
             this.rtb_log.Text = "";
+            // 
+            // tlp_main
+            // 
+            this.tlp_main.ColumnCount = 1;
+            this.tlp_main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_main.Controls.Add(this.tlp_footer, 0, 1);
+            this.tlp_main.Controls.Add(this.tc_01, 0, 0);
+            this.tlp_main.Controls.Add(this.tlp_loading, 0, 2);
+            this.tlp_main.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlp_main.Location = new System.Drawing.Point(0, 0);
+            this.tlp_main.Name = "tlp_main";
+            this.tlp_main.RowCount = 3;
+            this.tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tlp_main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tlp_main.Size = new System.Drawing.Size(664, 541);
+            this.tlp_main.TabIndex = 10;
+            // 
+            // tlp_footer
+            // 
+            this.tlp_footer.ColumnCount = 2;
+            this.tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tlp_footer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlp_footer.Controls.Add(this.rtb_log, 0, 0);
+            this.tlp_footer.Controls.Add(this.btn_clear, 1, 0);
+            this.tlp_footer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlp_footer.Location = new System.Drawing.Point(3, 394);
+            this.tlp_footer.Name = "tlp_footer";
+            this.tlp_footer.RowCount = 1;
+            this.tlp_footer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_footer.Size = new System.Drawing.Size(658, 94);
+            this.tlp_footer.TabIndex = 11;
+            // 
+            // tlp_loading
+            // 
+            this.tlp_loading.ColumnCount = 3;
+            this.tlp_loading.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlp_loading.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tlp_loading.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tlp_loading.Controls.Add(this.pb_loading, 1, 0);
+            this.tlp_loading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tlp_loading.Location = new System.Drawing.Point(3, 494);
+            this.tlp_loading.Name = "tlp_loading";
+            this.tlp_loading.RowCount = 1;
+            this.tlp_loading.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_loading.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlp_loading.Size = new System.Drawing.Size(658, 44);
+            this.tlp_loading.TabIndex = 12;
+            // 
+            // pb_loading
+            // 
+            this.pb_loading.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pb_loading.Image = ((System.Drawing.Image)(resources.GetObject("pb_loading.Image")));
+            this.pb_loading.Location = new System.Drawing.Point(232, 3);
+            this.pb_loading.Name = "pb_loading";
+            this.pb_loading.Size = new System.Drawing.Size(194, 38);
+            this.pb_loading.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pb_loading.TabIndex = 0;
+            this.pb_loading.TabStop = false;
             // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(624, 441);
-            this.Controls.Add(this.rtb_log);
-            this.Controls.Add(this.tc_01);
-            this.Controls.Add(this.pb_loading);
-            this.Controls.Add(this.btn_clear);
+            this.ClientSize = new System.Drawing.Size(664, 541);
+            this.Controls.Add(this.tlp_main);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(640, 480);
-            this.MinimumSize = new System.Drawing.Size(640, 480);
+            this.MinimumSize = new System.Drawing.Size(680, 540);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Vuclear [v1.0.0.9]";
+            this.Text = "Vuclear [v1.0.1.0]";
             this.Load += new System.EventHandler(this.FrmMain_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).EndInit();
             this.tc_01.ResumeLayout(false);
             this.tp_info.ResumeLayout(false);
             this.tp_clear.ResumeLayout(false);
             this.tp_tweak.ResumeLayout(false);
-            this.tp_tweak.PerformLayout();
+            this.tlp_tweak.ResumeLayout(false);
+            this.tlp_tweak.PerformLayout();
             this.tp_installApplication.ResumeLayout(false);
+            this.tlp_main.ResumeLayout(false);
+            this.tlp_footer.ResumeLayout(false);
+            this.tlp_loading.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pb_loading)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -268,7 +340,6 @@
         #endregion
         private System.Windows.Forms.Button btn_clear;
         private System.ComponentModel.BackgroundWorker bw_clear;
-        private System.Windows.Forms.PictureBox pb_loading;
         private System.Windows.Forms.TabControl tc_01;
         private System.Windows.Forms.TabPage tp_clear;
         private System.Windows.Forms.TabPage tp_tweak;
@@ -280,6 +351,11 @@
         private System.Windows.Forms.CheckedListBox clb_clear;
         private System.Windows.Forms.TabPage tp_info;
         private System.Windows.Forms.RichTextBox rtb_info;
+        private System.Windows.Forms.TableLayoutPanel tlp_main;
+        private System.Windows.Forms.TableLayoutPanel tlp_footer;
+        private System.Windows.Forms.TableLayoutPanel tlp_tweak;
+        private System.Windows.Forms.TableLayoutPanel tlp_loading;
+        private System.Windows.Forms.PictureBox pb_loading;
     }
 }
 

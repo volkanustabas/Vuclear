@@ -48,11 +48,10 @@ namespace Vuclear
         private bool ControlCheckbox()
         {
             var tpClearCount = clb_clear.SelectedItems.Count;
-            var tpTweakCount = tp_tweak.Controls.OfType<CheckBox>().Count(c => c.Checked);
             var tpInstallApplicationCount = clb_installApplication.SelectedItems.Count;
 
 
-            if (tpInstallApplicationCount > 0 || tpClearCount > 0 || tpTweakCount > 0)
+            if (tpInstallApplicationCount > 0 || tpClearCount > 0 || cb_tweak.Checked)
                 return true;
             return false;
         }
@@ -181,7 +180,7 @@ namespace Vuclear
                           @"exit /b 0";
 
             var executeBatLocation =
-                Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\Vuclear.bat";
+                Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\windowsTweaks.bat";
 
             using (var batFile = new StreamWriter(executeBatLocation))
             {
@@ -190,8 +189,8 @@ namespace Vuclear
 
             var processStartInfo = new ProcessStartInfo("cmd.exe", "/c " + executeBatLocation)
             {
-                UseShellExecute = true,
-                CreateNoWindow = false,
+                UseShellExecute = false,
+                CreateNoWindow = true,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 RedirectStandardOutput = true,
                 Verb = "runas"
@@ -224,11 +223,6 @@ namespace Vuclear
                 {
                     var installGoogleChrome = @"winget install --id=Google.Chrome -e";
                     ExecuteCommand(installGoogleChrome, "Google Chrome installed.", rtb_log);
-                }
-                else if (item.ToString() == "Greenshot")
-                {
-                    var installGreenshot = @"winget install --id=Greenshot.Greenshot -e";
-                    ExecuteCommand(installGreenshot, "Greenshot installed.", rtb_log);
                 }
                 else if (item.ToString() == "VLC Player")
                 {

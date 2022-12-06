@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -56,282 +55,6 @@ namespace Vuclear
             return false;
         }
 
-        private void ClearOptions()
-        {
-            foreach (var item in clb_clear.CheckedItems)
-
-                if (item.ToString() == "Clear Application History")
-                {
-                    var clearApplicationHistory =
-                        Resources.ResourceManager.GetString(@"clear_applicationHistory");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
-                        "Downloads\\clearApplicationHistory.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(clearApplicationHistory);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Clear Application History", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-
-                else if (item.ToString() == "Clear Browser History")
-                {
-                    var clearBrowserHistory =
-                        Resources.ResourceManager.GetString(@"clear_browserHistory");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\clearBrowserHistory.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(clearBrowserHistory);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Browser History cleared.", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-
-                else if (item.ToString() == "Clear Credential Cache")
-                {
-                    var clearCredentialCache =
-                        Resources.ResourceManager.GetString(@"clear_credentialCache");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
-                        "Downloads\\clearCredentialCache.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(clearCredentialCache);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Credential cache cleared", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-
-                else if (item.ToString() == "Clear Temp")
-                {
-                    var clearTemp =
-                        Resources.ResourceManager.GetString(@"clear_temp");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\clearTemp.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(clearTemp);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Temp cleared.", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-
-                else if (item.ToString() == "Clear Windows Logs Caches")
-                {
-                    var clearWindowsLogsCaches =
-                        Resources.ResourceManager.GetString(@"clear_windowsLogsCaches");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
-                        "Downloads\\clearWindowsLogsCaches.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(clearWindowsLogsCaches);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Windows Logs Caches cleared.", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-
-                else
-                {
-                    var emptyTrashBin =
-                        Resources.ResourceManager.GetString(@"clear_emptyTrashBin");
-                    var executeBatLocation =
-                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\emptyTrashBin.bat";
-
-                    using (var batFile = new StreamWriter(executeBatLocation))
-                    {
-                        batFile.WriteLine(emptyTrashBin);
-                    }
-
-                    ExecuteCommand(executeBatLocation, "Trash bin cleared.", rtb_log);
-
-                    File.Delete(executeBatLocation);
-                }
-        }
-
-        private void WindowsTweaks()
-        {
-            ScriptTweak = @"";
-
-            if (cb_tweak.Checked)
-                ScriptTweak =
-                    Resources.ResourceManager.GetString(@"script_tweak") + Environment.NewLine +
-                    Environment.NewLine;
-
-
-            var scripts = ScriptTweak + Environment.NewLine +
-                          @"exit /b 0";
-
-            var executeBatLocation =
-                Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\windowsTweaks.bat";
-
-            using (var batFile = new StreamWriter(executeBatLocation))
-            {
-                batFile.WriteLine(scripts);
-            }
-
-            var processStartInfo = new ProcessStartInfo("cmd.exe", "/c " + executeBatLocation)
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                RedirectStandardOutput = true,
-                Verb = "runas"
-            };
-
-            var p = new Process {StartInfo = processStartInfo};
-            p.Start();
-            var result = p.StandardOutput.ReadToEnd();
-            rtb_log.AppendText(result + Environment.NewLine);
-            p.WaitForExit();
-
-            File.Delete(executeBatLocation);
-        }
-
-        private void InstallApplication()
-        {
-            foreach (var item in clb_installApplication.CheckedItems)
-                if (item.ToString() == "7-zip")
-                {
-                    var install7Zip = @"winget install --id=7zip.7zip -e";
-                    ExecuteCommand(install7Zip, "7zip installed.", rtb_log);
-                }
-                else if (item.ToString() == "Mozilla Firefox")
-                {
-                    var installFirefox = @"winget install --id=Mozilla.Firefox -e";
-                    ExecuteCommand(installFirefox, "Mozilla Firefox installed.", rtb_log);
-                }
-
-                else if (item.ToString() == "Google Chrome")
-                {
-                    var installGoogleChrome = @"winget install --id=Google.Chrome -e";
-                    ExecuteCommand(installGoogleChrome, "Google Chrome installed.", rtb_log);
-                }
-                else if (item.ToString() == "VLC Player")
-                {
-                    var installVlcPlayer = @"winget install --id=VideoLAN.VLC -e";
-                    ExecuteCommand(installVlcPlayer, "VLC Player installed.", rtb_log);
-                }
-                else if (item.ToString() == "Notepad++")
-                {
-                    var installNotepadPlusPlus = @"winget install --id=Notepad++.Notepad++ -e";
-                    ExecuteCommand(installNotepadPlusPlus, "Notepad++ installed.", rtb_log);
-                }
-                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x64)")
-                {
-                    var installMicrosoftVcRedistX64 = @"winget install -e --id Microsoft.VC++2015-2022Redist-x64";
-                    ExecuteCommand(installMicrosoftVcRedistX64, "Microsoft VC++ 2015-2022 Redist-x64 installed.",
-                        rtb_log);
-                }
-
-                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x86)")
-                {
-                    var installMicrosoftVcRedistX86 = @"winget install -e --id Microsoft.VC++2015-2022Redist-x86";
-                    ExecuteCommand(installMicrosoftVcRedistX86, "Microsoft VC++ 2015-2022 Redist-x86 installed.",
-                        rtb_log);
-                }
-                else if (item.ToString() == "Microsoft Edge")
-                {
-                    var installMicrosoftEdge = @"winget install -e --id Microsoft.Edge";
-                    ExecuteCommand(installMicrosoftEdge, "Microsoft Edge installed.", rtb_log);
-                }
-                else if (item.ToString() == "Libre Office")
-                {
-                    var installLibreOffice = @"winget install -e --id TheDocumentFoundation.LibreOffice";
-                    ExecuteCommand(installLibreOffice, "Libre Office installed.", rtb_log);
-                }
-                else if (item.ToString() == "ShareX")
-                {
-                    var installShareX = @"winget install -e --id ShareX.ShareX";
-                    ExecuteCommand(installShareX, "ShareX installed.", rtb_log);
-                }
-                else if (item.ToString() == "ImageGlass")
-                {
-                    var installImageGlass = @"winget install -e --id DuongDieuPhap.ImageGlass";
-                    ExecuteCommand(installImageGlass, "ImageGlass installed.", rtb_log);
-                }
-                else if (item.ToString() == "qBittorrent")
-                {
-                    var installQbittorrent = @"winget install -e --id qBittorrent.qBittorrent";
-                    ExecuteCommand(installQbittorrent, "qBittorrent installed.", rtb_log);
-                }
-                else if (item.ToString() == "Discord")
-                {
-                    var installDiscord = @"winget install -e --id Discord.Discord";
-                    ExecuteCommand(installDiscord, "Discord installed.", rtb_log);
-                }
-                else if (item.ToString() == "Steam")
-                {
-                    var installSteam = @"winget install -e --id Valve.Steam";
-                    ExecuteCommand(installSteam, "Steam installed.", rtb_log);
-                }
-                else if (item.ToString() == "Microsoft Visual Studio Code")
-                {
-                    var installMicrosoftVisualStudioCode = @"winget install -e --id Microsoft.VisualStudioCode";
-                    ExecuteCommand(installMicrosoftVisualStudioCode, "Microsoft Visual Studio Code installed.", rtb_log);
-                }
-                else if (item.ToString() == "Spotify")
-                {
-                    var installSpotify = @"winget install -e --id Spotify.Spotify";
-                    ExecuteCommand(installSpotify, "Spotify installed.", rtb_log);
-                }
-                else if (item.ToString() == "Java Runtime Environment")
-                {
-                    var installJavaRuntime = @"winget install -e --id Oracle.JavaRuntimeEnvironment";
-                    ExecuteCommand(installJavaRuntime, "Java Runtime Environment installed.", rtb_log);
-                }
-        }
-
-        private void btn_clear_Click(object sender, EventArgs e)
-        {
-            if (ControlCheckbox())
-            {
-                bw_clear.RunWorkerAsync();
-                EnabledFalse();
-            }
-            else
-            {
-                MessageBox.Show(@"You must choose at least one option!", @"Info",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-            }
-        }
-
-        private void bw_clear_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BeginInvoke((MethodInvoker) delegate { pb_loading.Visible = true; });
-
-            if (_tpClear)
-                ClearOptions();
-            else if (_tpWindowsTweaks)
-                WindowsTweaks();
-            else
-                InstallApplication();
-        }
-
-        private void bw_clear_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            pb_loading.Visible = false;
-            EnabledTrue();
-        }
-
         private void tc_01_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tc_01.SelectedTab == tp_clear)
@@ -379,6 +102,49 @@ namespace Vuclear
                 rtbLog.AppendText(objException + Environment.NewLine);
             }
         }
+
+        #region Tweak
+
+        private void WindowsTweaks()
+        {
+            ScriptTweak = @"";
+
+            if (cb_tweak.Checked)
+                ScriptTweak =
+                    Resources.ResourceManager.GetString(@"script_tweak") + Environment.NewLine +
+                    Environment.NewLine;
+
+
+            var scripts = ScriptTweak + Environment.NewLine +
+                          @"exit /b 0";
+
+            var executeBatLocation =
+                Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\windowsTweaks.bat";
+
+            using (var batFile = new StreamWriter(executeBatLocation))
+            {
+                batFile.WriteLine(scripts);
+            }
+
+            var processStartInfo = new ProcessStartInfo("cmd.exe", "/c " + executeBatLocation)
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                RedirectStandardOutput = true,
+                Verb = "runas"
+            };
+
+            var p = new Process {StartInfo = processStartInfo};
+            p.Start();
+            var result = p.StandardOutput.ReadToEnd();
+            rtb_log.AppendText(result + Environment.NewLine);
+            p.WaitForExit();
+
+            File.Delete(executeBatLocation);
+        }
+
+        #endregion
 
         #region INFO
 
@@ -434,7 +200,7 @@ namespace Vuclear
                     var dt = ManagementDateTimeConverter.ToDateTime(releaseDt);
                     var biosDateConvert = dt.ToString("yyyy.MM.dd");
 
-                    var biosDetail =@"v"+ (string) obj["SMBIOSBIOSVersion"] + @" - " + biosDateConvert;
+                    var biosDetail = @"v" + (string) obj["SMBIOSBIOSVersion"] + @" - " + biosDateConvert;
 
                     return biosDetail;
                 }
@@ -640,6 +406,264 @@ namespace Vuclear
 
                 return $"{dblSByte:0.#} {Suffix[i]}";
             }
+        }
+
+        #endregion
+
+        #region Install
+
+        private void cb_install_selectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_install_selectAll.Checked)
+            {
+                for (var i = 0; i < clb_installApplication.Items.Count; i++) clb_installApplication.SetItemChecked(i, true);
+            }
+            else
+            {
+                for (var i = 0; i < clb_installApplication.Items.Count; i++) clb_installApplication.SetItemChecked(i, false);
+            }
+        }
+
+        private void InstallApplication()
+        {
+            foreach (var item in clb_installApplication.CheckedItems)
+                if (item.ToString() == "7-zip")
+                {
+                    var install7Zip = @"winget install --id=7zip.7zip -e";
+                    ExecuteCommand(install7Zip, "7zip installed.", rtb_log);
+                }
+                else if (item.ToString() == "Mozilla Firefox")
+                {
+                    var installFirefox = @"winget install --id=Mozilla.Firefox -e";
+                    ExecuteCommand(installFirefox, "Mozilla Firefox installed.", rtb_log);
+                }
+
+                else if (item.ToString() == "Google Chrome")
+                {
+                    var installGoogleChrome = @"winget install --id=Google.Chrome -e";
+                    ExecuteCommand(installGoogleChrome, "Google Chrome installed.", rtb_log);
+                }
+                else if (item.ToString() == "VLC Player")
+                {
+                    var installVlcPlayer = @"winget install --id=VideoLAN.VLC -e";
+                    ExecuteCommand(installVlcPlayer, "VLC Player installed.", rtb_log);
+                }
+                else if (item.ToString() == "Notepad++")
+                {
+                    var installNotepadPlusPlus = @"winget install --id=Notepad++.Notepad++ -e";
+                    ExecuteCommand(installNotepadPlusPlus, "Notepad++ installed.", rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x64)")
+                {
+                    var installMicrosoftVcRedistX64 = @"winget install --id=Microsoft.VCRedist.2015+.x64 -e";
+                    ExecuteCommand(installMicrosoftVcRedistX64, "Microsoft VC++ 2015-2022 Redist-x64 installed.",
+                        rtb_log);
+                }
+
+                else if (item.ToString() == "Microsoft Visual C++ 2015-2022 Redistributable (x86)")
+                {
+                    var installMicrosoftVcRedistX86 = @"winget install --id=Microsoft.VCRedist.2015+.x86 -e";
+                    ExecuteCommand(installMicrosoftVcRedistX86, "Microsoft VC++ 2015-2022 Redist-x86 installed.",
+                        rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Edge")
+                {
+                    var installMicrosoftEdge = @"winget install -e --id Microsoft.Edge";
+                    ExecuteCommand(installMicrosoftEdge, "Microsoft Edge installed.", rtb_log);
+                }
+                else if (item.ToString() == "Libre Office")
+                {
+                    var installLibreOffice = @"winget install -e --id TheDocumentFoundation.LibreOffice";
+                    ExecuteCommand(installLibreOffice, "Libre Office installed.", rtb_log);
+                }
+                else if (item.ToString() == "ShareX")
+                {
+                    var installShareX = @"winget install -e --id ShareX.ShareX";
+                    ExecuteCommand(installShareX, "ShareX installed.", rtb_log);
+                }
+                else if (item.ToString() == "ImageGlass")
+                {
+                    var installImageGlass = @"winget install -e --id DuongDieuPhap.ImageGlass";
+                    ExecuteCommand(installImageGlass, "ImageGlass installed.", rtb_log);
+                }
+                else if (item.ToString() == "qBittorrent")
+                {
+                    var installQbittorrent = @"winget install -e --id qBittorrent.qBittorrent";
+                    ExecuteCommand(installQbittorrent, "qBittorrent installed.", rtb_log);
+                }
+                else if (item.ToString() == "Discord")
+                {
+                    var installDiscord = @"winget install -e --id Discord.Discord";
+                    ExecuteCommand(installDiscord, "Discord installed.", rtb_log);
+                }
+                else if (item.ToString() == "Steam")
+                {
+                    var installSteam = @"winget install -e --id Valve.Steam";
+                    ExecuteCommand(installSteam, "Steam installed.", rtb_log);
+                }
+                else if (item.ToString() == "Microsoft Visual Studio Code")
+                {
+                    var installMicrosoftVisualStudioCode = @"winget install -e --id Microsoft.VisualStudioCode";
+                    ExecuteCommand(installMicrosoftVisualStudioCode, "Microsoft Visual Studio Code installed.",
+                        rtb_log);
+                }
+                else if (item.ToString() == "Spotify")
+                {
+                    var installSpotify = @"winget install -e --id Spotify.Spotify";
+                    ExecuteCommand(installSpotify, "Spotify installed.", rtb_log);
+                }
+                else if (item.ToString() == "Java Runtime Environment")
+                {
+                    var installJavaRuntime = @"winget install -e --id Oracle.JavaRuntimeEnvironment";
+                    ExecuteCommand(installJavaRuntime, "Java Runtime Environment installed.", rtb_log);
+                }
+        }
+
+        #endregion
+
+        #region Clear
+
+        private void ClearOptions()
+        {
+            foreach (var item in clb_clear.CheckedItems)
+
+                if (item.ToString() == "Clear Application History")
+                {
+                    var clearApplicationHistory =
+                        Resources.ResourceManager.GetString(@"clear_applicationHistory");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
+                        "Downloads\\clearApplicationHistory.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(clearApplicationHistory);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Clear Application History", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+
+                else if (item.ToString() == "Clear Browser History")
+                {
+                    var clearBrowserHistory =
+                        Resources.ResourceManager.GetString(@"clear_browserHistory");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\clearBrowserHistory.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(clearBrowserHistory);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Browser History cleared.", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+
+                else if (item.ToString() == "Clear Credential Cache")
+                {
+                    var clearCredentialCache =
+                        Resources.ResourceManager.GetString(@"clear_credentialCache");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
+                        "Downloads\\clearCredentialCache.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(clearCredentialCache);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Credential cache cleared", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+
+                else if (item.ToString() == "Clear Temp")
+                {
+                    var clearTemp =
+                        Resources.ResourceManager.GetString(@"clear_temp");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\clearTemp.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(clearTemp);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Temp cleared.", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+
+                else if (item.ToString() == "Clear Windows Logs Caches")
+                {
+                    var clearWindowsLogsCaches =
+                        Resources.ResourceManager.GetString(@"clear_windowsLogsCaches");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" +
+                        "Downloads\\clearWindowsLogsCaches.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(clearWindowsLogsCaches);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Windows Logs Caches cleared.", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+
+                else
+                {
+                    var emptyTrashBin =
+                        Resources.ResourceManager.GetString(@"clear_emptyTrashBin");
+                    var executeBatLocation =
+                        Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\emptyTrashBin.bat";
+
+                    using (var batFile = new StreamWriter(executeBatLocation))
+                    {
+                        batFile.WriteLine(emptyTrashBin);
+                    }
+
+                    ExecuteCommand(executeBatLocation, "Trash bin cleared.", rtb_log);
+
+                    File.Delete(executeBatLocation);
+                }
+        }
+
+        private void btn_clear_Click(object sender, EventArgs e)
+        {
+            if (ControlCheckbox())
+            {
+                bw_clear.RunWorkerAsync();
+                EnabledFalse();
+            }
+            else
+            {
+                MessageBox.Show(@"You must choose at least one option!", @"Info",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+        }
+
+        private void bw_clear_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BeginInvoke((MethodInvoker) delegate { pb_loading.Visible = true; });
+
+            if (_tpClear)
+                ClearOptions();
+            else if (_tpWindowsTweaks)
+                WindowsTweaks();
+            else
+                InstallApplication();
+        }
+
+        private void bw_clear_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            pb_loading.Visible = false;
+            EnabledTrue();
         }
 
         #endregion

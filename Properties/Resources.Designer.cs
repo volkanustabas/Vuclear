@@ -231,27 +231,5 @@ namespace Vuclear.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to @echo off
-        ///
-        ///fltmc &gt;nul 2&gt;&amp;1 || (
-        ///    echo Administrator privileges are required.
-        ///    PowerShell Start -Verb RunAs &apos;%0&apos; 2&gt; nul || (
-        ///        echo Right-click on the script and select &quot;Run as administrator&quot;.
-        ///        pause &amp; exit 1
-        ///    )
-        ///    exit 0
-        ///)
-        ///
-        ///:: Show file extensions in Explorer
-        ///powershell -Command &quot;Write-Host &apos; [Setting] Show file extensions in Explorer &apos; -F blue -B black&quot;
-        ///reg add &quot;HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced&quot; /v &quot;HideFileExt&quot; /t  REG_DWORD /d 0 /f &gt;nul  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string script_tweak {
-            get {
-                return ResourceManager.GetString("script_tweak", resourceCulture);
-            }
-        }
     }
 }

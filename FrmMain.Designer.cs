@@ -36,12 +36,11 @@
             this.rtb_info = new System.Windows.Forms.RichTextBox();
             this.tp_tweak = new System.Windows.Forms.TabPage();
             this.tlp_tweak = new System.Windows.Forms.TableLayoutPanel();
-            this.rtb_tweak_details = new System.Windows.Forms.RichTextBox();
-            this.cb_tweak = new System.Windows.Forms.CheckBox();
+            this.clb_tweak_all = new System.Windows.Forms.CheckedListBox();
+            this.cb_tweak_selectAll = new System.Windows.Forms.CheckBox();
             this.tp_installApplication = new System.Windows.Forms.TabPage();
             this.tlp_install = new System.Windows.Forms.TableLayoutPanel();
             this.clb_installApplication = new System.Windows.Forms.CheckedListBox();
-            this.tlp_install_checkbox = new System.Windows.Forms.TableLayoutPanel();
             this.cb_install_selectAll = new System.Windows.Forms.CheckBox();
             this.tp_clear = new System.Windows.Forms.TabPage();
             this.clb_clear = new System.Windows.Forms.CheckedListBox();
@@ -56,7 +55,6 @@
             this.tlp_tweak.SuspendLayout();
             this.tp_installApplication.SuspendLayout();
             this.tlp_install.SuspendLayout();
-            this.tlp_install_checkbox.SuspendLayout();
             this.tp_clear.SuspendLayout();
             this.tlp_main.SuspendLayout();
             this.tlp_footer.SuspendLayout();
@@ -137,40 +135,52 @@
             // 
             this.tlp_tweak.ColumnCount = 1;
             this.tlp_tweak.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_tweak.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tlp_tweak.Controls.Add(this.rtb_tweak_details, 0, 1);
-            this.tlp_tweak.Controls.Add(this.cb_tweak, 0, 0);
+            this.tlp_tweak.Controls.Add(this.clb_tweak_all, 0, 1);
+            this.tlp_tweak.Controls.Add(this.cb_tweak_selectAll, 0, 0);
             this.tlp_tweak.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_tweak.Location = new System.Drawing.Point(3, 3);
             this.tlp_tweak.Name = "tlp_tweak";
+            this.tlp_tweak.Padding = new System.Windows.Forms.Padding(5);
             this.tlp_tweak.RowCount = 2;
-            this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tlp_tweak.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tlp_tweak.Size = new System.Drawing.Size(644, 347);
             this.tlp_tweak.TabIndex = 0;
             // 
-            // rtb_tweak_details
+            // clb_tweak_all
             // 
-            this.rtb_tweak_details.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(234)))));
-            this.rtb_tweak_details.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtb_tweak_details.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.rtb_tweak_details.Location = new System.Drawing.Point(3, 53);
-            this.rtb_tweak_details.Name = "rtb_tweak_details";
-            this.rtb_tweak_details.ReadOnly = true;
-            this.rtb_tweak_details.Size = new System.Drawing.Size(638, 291);
-            this.rtb_tweak_details.TabIndex = 2;
-            this.rtb_tweak_details.Text = resources.GetString("rtb_tweak_details.Text");
+            this.clb_tweak_all.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(223)))), ((int)(((byte)(228)))), ((int)(((byte)(234)))));
+            this.clb_tweak_all.CheckOnClick = true;
+            this.clb_tweak_all.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clb_tweak_all.FormattingEnabled = true;
+            this.clb_tweak_all.Items.AddRange(new object[] {
+            "[Disable] Edge WebWidget",
+            "[Disable] MRU lists (jump lists) of XAML apps in Start Menu",
+            "[Disable] Windows animations, menu Start animations",
+            "[Setting] Disable Transparency in taskbar/menu start",
+            "[Setting] Dual boot timeout 3sec",
+            "[Setting] Enable All (Logical) Cores (Boot Advanced Options)",
+            "[Setting] Hide the search box from taskbar",
+            "[Setting] Power option to ultimate performance",
+            "[Setting] Show file extensions in Explorer",
+            "[Setting] Windows Explorer to start on This PC instead of Quick Access"});
+            this.clb_tweak_all.Location = new System.Drawing.Point(8, 48);
+            this.clb_tweak_all.Name = "clb_tweak_all";
+            this.clb_tweak_all.Size = new System.Drawing.Size(628, 291);
+            this.clb_tweak_all.Sorted = true;
+            this.clb_tweak_all.TabIndex = 0;
             // 
-            // cb_tweak
+            // cb_tweak_selectAll
             // 
-            this.cb_tweak.AutoSize = true;
-            this.cb_tweak.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
-            this.cb_tweak.Location = new System.Drawing.Point(3, 3);
-            this.cb_tweak.Name = "cb_tweak";
-            this.cb_tweak.Size = new System.Drawing.Size(262, 23);
-            this.cb_tweak.TabIndex = 1;
-            this.cb_tweak.Text = "All necessary tools after installation";
-            this.cb_tweak.UseVisualStyleBackColor = true;
+            this.cb_tweak_selectAll.AutoSize = true;
+            this.cb_tweak_selectAll.Location = new System.Drawing.Point(8, 8);
+            this.cb_tweak_selectAll.Name = "cb_tweak_selectAll";
+            this.cb_tweak_selectAll.Size = new System.Drawing.Size(88, 23);
+            this.cb_tweak_selectAll.TabIndex = 1;
+            this.cb_tweak_selectAll.Text = "Select All";
+            this.cb_tweak_selectAll.UseVisualStyleBackColor = true;
+            this.cb_tweak_selectAll.CheckedChanged += new System.EventHandler(this.cb_tweak_selectAll_CheckedChanged);
             // 
             // tp_installApplication
             // 
@@ -188,10 +198,11 @@
             this.tlp_install.ColumnCount = 1;
             this.tlp_install.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlp_install.Controls.Add(this.clb_installApplication, 0, 1);
-            this.tlp_install.Controls.Add(this.tlp_install_checkbox, 0, 0);
+            this.tlp_install.Controls.Add(this.cb_install_selectAll, 0, 0);
             this.tlp_install.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlp_install.Location = new System.Drawing.Point(3, 3);
             this.tlp_install.Name = "tlp_install";
+            this.tlp_install.Padding = new System.Windows.Forms.Padding(5);
             this.tlp_install.RowCount = 2;
             this.tlp_install.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tlp_install.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -224,37 +235,21 @@
             "Spotify",
             "Steam",
             "VLC Player"});
-            this.clb_installApplication.Location = new System.Drawing.Point(3, 43);
+            this.clb_installApplication.Location = new System.Drawing.Point(8, 48);
             this.clb_installApplication.Name = "clb_installApplication";
             this.clb_installApplication.ScrollAlwaysVisible = true;
-            this.clb_installApplication.Size = new System.Drawing.Size(638, 301);
+            this.clb_installApplication.Size = new System.Drawing.Size(628, 291);
             this.clb_installApplication.Sorted = true;
             this.clb_installApplication.TabIndex = 0;
-            // 
-            // tlp_install_checkbox
-            // 
-            this.tlp_install_checkbox.ColumnCount = 4;
-            this.tlp_install_checkbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_install_checkbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_install_checkbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_install_checkbox.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tlp_install_checkbox.Controls.Add(this.cb_install_selectAll, 0, 0);
-            this.tlp_install_checkbox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tlp_install_checkbox.Location = new System.Drawing.Point(3, 3);
-            this.tlp_install_checkbox.Name = "tlp_install_checkbox";
-            this.tlp_install_checkbox.RowCount = 1;
-            this.tlp_install_checkbox.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlp_install_checkbox.Size = new System.Drawing.Size(638, 34);
-            this.tlp_install_checkbox.TabIndex = 1;
             // 
             // cb_install_selectAll
             // 
             this.cb_install_selectAll.AutoSize = true;
-            this.cb_install_selectAll.Location = new System.Drawing.Point(3, 3);
+            this.cb_install_selectAll.Location = new System.Drawing.Point(8, 8);
             this.cb_install_selectAll.Name = "cb_install_selectAll";
-            this.cb_install_selectAll.Size = new System.Drawing.Size(94, 23);
-            this.cb_install_selectAll.TabIndex = 0;
-            this.cb_install_selectAll.Text = "Select ALL";
+            this.cb_install_selectAll.Size = new System.Drawing.Size(88, 23);
+            this.cb_install_selectAll.TabIndex = 1;
+            this.cb_install_selectAll.Text = "Select All";
             this.cb_install_selectAll.UseVisualStyleBackColor = true;
             this.cb_install_selectAll.CheckedChanged += new System.EventHandler(this.cb_install_selectAll_CheckedChanged);
             // 
@@ -370,7 +365,7 @@
             this.MinimumSize = new System.Drawing.Size(680, 540);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Vuclear [v1.0.1.1]";
+            this.Text = "Vuclear [v1.0.1.2]";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tc_01.ResumeLayout(false);
             this.tp_info.ResumeLayout(false);
@@ -379,8 +374,7 @@
             this.tlp_tweak.PerformLayout();
             this.tp_installApplication.ResumeLayout(false);
             this.tlp_install.ResumeLayout(false);
-            this.tlp_install_checkbox.ResumeLayout(false);
-            this.tlp_install_checkbox.PerformLayout();
+            this.tlp_install.PerformLayout();
             this.tp_clear.ResumeLayout(false);
             this.tlp_main.ResumeLayout(false);
             this.tlp_footer.ResumeLayout(false);
@@ -396,8 +390,6 @@
         private System.Windows.Forms.TabControl tc_01;
         private System.Windows.Forms.TabPage tp_clear;
         private System.Windows.Forms.TabPage tp_tweak;
-        private System.Windows.Forms.CheckBox cb_tweak;
-        private System.Windows.Forms.RichTextBox rtb_tweak_details;
         private System.Windows.Forms.TabPage tp_installApplication;
         private System.Windows.Forms.CheckedListBox clb_installApplication;
         private System.Windows.Forms.RichTextBox rtb_log;
@@ -410,7 +402,8 @@
         private System.Windows.Forms.TableLayoutPanel tlp_loading;
         private System.Windows.Forms.PictureBox pb_loading;
         private System.Windows.Forms.TableLayoutPanel tlp_install;
-        private System.Windows.Forms.TableLayoutPanel tlp_install_checkbox;
+        private System.Windows.Forms.CheckedListBox clb_tweak_all;
+        private System.Windows.Forms.CheckBox cb_tweak_selectAll;
         private System.Windows.Forms.CheckBox cb_install_selectAll;
     }
 }

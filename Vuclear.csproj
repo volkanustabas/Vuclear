@@ -57,10 +57,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FrmMain.cs">
@@ -99,7 +97,6 @@
     <None Include="Resources\clear_emptyTrashBin.bat" />
     <None Include="Resources\clear_temp.bat" />
     <None Include="Resources\clear_windowsLogsCaches.bat" />
-    <None Include="Resources\script_tweak.bat" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

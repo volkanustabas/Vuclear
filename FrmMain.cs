@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
+using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Vuclear.Properties;
@@ -48,9 +50,10 @@ namespace Vuclear
         {
             var tpClearCount = clb_clear.SelectedItems.Count;
             var tpInstallApplicationCount = clb_installApplication.SelectedItems.Count;
+            var tpTweakCount = clb_tweak_all.SelectedItems.Count;
 
 
-            if (tpInstallApplicationCount > 0 || tpClearCount > 0 || cb_tweak.Checked)
+            if (tpInstallApplicationCount > 0 || tpClearCount > 0 || tpTweakCount > 0)
                 return true;
             return false;
         }
@@ -105,18 +108,125 @@ namespace Vuclear
 
         #region Tweak
 
+        private void cb_tweak_selectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_tweak_selectAll.Checked)
+                for (var i = 0; i < clb_tweak_all.Items.Count; i++)
+                    clb_tweak_all.SetItemChecked(i, true);
+            else
+                for (var i = 0; i < clb_tweak_all.Items.Count; i++)
+                    clb_tweak_all.SetItemChecked(i, false);
+        }
+
         private void WindowsTweaks()
         {
-            ScriptTweak = @"";
+            var allScript = new List<string>();
 
-            if (cb_tweak.Checked)
-                ScriptTweak =
-                    Resources.ResourceManager.GetString(@"script_tweak") + Environment.NewLine +
-                    Environment.NewLine;
+            var tweakStartCommand = @"@echo off
+fltmc >nul 2>&1 || (
+echo Administrator privileges are required.
+PowerShell Start -Verb RunAs '%0' 2> nul || (
+    echo Right-click on the script and select ""Run as administrator"".
+    pause & exit 1
+)
+exit 0)" + Environment.NewLine;
+
+            allScript.Add(tweakStartCommand);
+
+            foreach (var item in clb_tweak_all.CheckedItems)
+            {
+                if (item.ToString() == "[Setting] Show file extensions in Explorer")
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""HideFileExt"" /t  REG_DWORD /d 0 /f >nul 2>nul");
+                else if (item.ToString() == @"[Setting] Disable Transparency in taskbar/menu start")
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul");
+
+                else if (item.ToString() == @"[Disable] Windows animations, menu Start animations")
+                    allScript.Add(Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\Control Panel\Desktop"" /v UserPreferencesMask /t REG_BINARY /d 9012078010000000 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\Control Panel\Desktop\WindowMetrics"" /v MinAnimate /t REG_SZ /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\AnimateMinMax"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ControlAnimations"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul");
+
+                else if (item.ToString() == @"[Disable] MRU lists (jump lists) of XAML apps in Start Menu")
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""Start_TrackDocs"" /t REG_DWORD /d 0 /f >nul 2>nul");
+
+                else if (item.ToString() == @"[Setting] Hide the search box from taskbar")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search"" /v ""SearchboxTaskbarMode"" /t REG_DWORD /d 1 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Windows Explorer to start on This PC instead of Quick Access")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""LaunchTo"" /t REG_DWORD /d 1 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Edge WebWidget")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"REG ADD ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge"" /v WebWidgetAllowed /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Power option to ultimate performance")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"powercfg -setactive scheme_min >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"powercfg -setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>nul" +
+                                  Environment.NewLine +
+                                  "powercfg /S ceb6bfc7-d55c-4d56-ae37-ff264aade12d >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Enable All (Logical) Cores (Boot Advanced Options)")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"wmic cpu get NumberOfLogicalProcessors | findstr /r ""[0-9]"" > NumLogicalCores.txt" +
+                                  Environment.NewLine +
+                                  @"set /P NOLP=<NumLogicalCores.txt" +
+                                  Environment.NewLine +
+                                  "bcdedit /set {current} numproc %NOLP% >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"if exist NumLogicalCores.txt del NumLogicalCores.txt");
+                }
+
+                else if (item.ToString() == @"[Setting] Dual boot timeout 3sec")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"bcdedit /set timeout 3 >nul 2>nul");
+                }
 
 
-            var scripts = ScriptTweak + Environment.NewLine +
-                          @"exit /b 0";
+
+
+            }
+
+            var tweakFnishedCommand = Environment.NewLine + Environment.NewLine + @"exit /b 0";
+            allScript.Add(tweakFnishedCommand);
+            var builder = new StringBuilder();
+            foreach (var command in allScript) builder.Append(command);
+            allScript.Add(builder.ToString());
+            var scripts = builder.ToString();
 
             var executeBatLocation =
                 Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\windowsTweaks.bat";
@@ -251,9 +361,6 @@ namespace Vuclear
                 foreach (var o in searcher.Get())
                 {
                     var queryObj = (ManagementObject) o;
-                    var osInstallDateConvert =
-                        ManagementDateTimeConverter.ToDateTime(queryObj["InstallDate"].ToString());
-
                     var os = queryObj["Caption"] + @" " + queryObj["BuildNumber"];
                     return os;
                 }
@@ -389,22 +496,22 @@ namespace Vuclear
         {
             public static string ByteToString(ulong bytes)
             {
-                string[] Suffix = {"bytes", "KB", "GB", "TB"};
+                string[] suffix = {"bytes", "KB", "GB", "TB"};
                 int i;
                 double dblSByte = bytes;
-                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
+                for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
 
-                return $"{dblSByte:0.#} {Suffix[i]}";
+                return $"{dblSByte:0.#} {suffix[i]}";
             }
 
             public static string ByteToStringForInfo(ulong bytes)
             {
-                string[] Suffix = {"bytes", "KB", "MB", "GB", "TB"};
+                string[] suffix = {"bytes", "KB", "MB", "GB", "TB"};
                 int i;
                 double dblSByte = bytes;
-                for (i = 0; i < Suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
+                for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
 
-                return $"{dblSByte:0.#} {Suffix[i]}";
+                return $"{dblSByte:0.#} {suffix[i]}";
             }
         }
 
@@ -415,13 +522,11 @@ namespace Vuclear
         private void cb_install_selectAll_CheckedChanged(object sender, EventArgs e)
         {
             if (cb_install_selectAll.Checked)
-            {
-                for (var i = 0; i < clb_installApplication.Items.Count; i++) clb_installApplication.SetItemChecked(i, true);
-            }
+                for (var i = 0; i < clb_installApplication.Items.Count; i++)
+                    clb_installApplication.SetItemChecked(i, true);
             else
-            {
-                for (var i = 0; i < clb_installApplication.Items.Count; i++) clb_installApplication.SetItemChecked(i, false);
-            }
+                for (var i = 0; i < clb_installApplication.Items.Count; i++)
+                    clb_installApplication.SetItemChecked(i, false);
         }
 
         private void InstallApplication()
@@ -633,6 +738,10 @@ namespace Vuclear
                 }
         }
 
+        #endregion
+
+        #region BW_Clear
+
         private void btn_clear_Click(object sender, EventArgs e)
         {
             if (ControlCheckbox())
@@ -650,7 +759,7 @@ namespace Vuclear
 
         private void bw_clear_DoWork(object sender, DoWorkEventArgs e)
         {
-            BeginInvoke((MethodInvoker) delegate { pb_loading.Visible = true; });
+            BeginInvoke((MethodInvoker)delegate { pb_loading.Visible = true; });
 
             if (_tpClear)
                 ClearOptions();
@@ -667,5 +776,6 @@ namespace Vuclear
         }
 
         #endregion
+
     }
 }

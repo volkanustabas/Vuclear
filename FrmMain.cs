@@ -16,8 +16,9 @@ namespace Vuclear
         private bool _tpClear;
         private bool _tpInstallApplication;
         private bool _tpWindowsTweaks;
-
-        public string ScriptTweak;
+        private int _tpClearCount;
+        private int _tpTweakCount;
+        private int _tpInstallApplicationCount;
 
         public FrmMain()
         {
@@ -30,9 +31,6 @@ namespace Vuclear
         private void FrmMain_Load(object sender, EventArgs e)
         {
             InfoFillData();
-
-            lbl_install_count.Text = clb_installApplication.Items.Count.ToString();
-            lbl_tweak_count.Text = clb_tweak_all.Items.Count.ToString();
         }
 
         private void EnabledFalse()
@@ -51,12 +49,7 @@ namespace Vuclear
 
         private bool ControlCheckbox()
         {
-            var tpClearCount = clb_clear.SelectedItems.Count;
-            var tpInstallApplicationCount = clb_installApplication.SelectedItems.Count;
-            var tpTweakCount = clb_tweak_all.SelectedItems.Count;
-
-
-            if (tpInstallApplicationCount > 0 || tpClearCount > 0 || tpTweakCount > 0)
+            if (_tpInstallApplicationCount > 0 || _tpClearCount > 0 || _tpTweakCount > 0)
                 return true;
             return false;
         }
@@ -110,6 +103,20 @@ namespace Vuclear
         }
 
         #region Tweak
+
+        private void clb_tweak_all_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked)
+            {
+                _tpTweakCount++;
+                lbl_tweak_count.Text = _tpTweakCount.ToString();
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                _tpTweakCount--;
+                lbl_tweak_count.Text = _tpTweakCount.ToString();
+            }
+        }
 
         private void cb_tweak_selectAll_CheckedChanged(object sender, EventArgs e)
         {
@@ -384,14 +391,221 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement"" /v ""ScoobeSystemSettingEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
                 }
 
+                else if (item.ToString() == @"[Disable] Automatically installing suggested apps")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent"" /v ""DisableWindowsConsumerFeatures"" /t REG_DWORD /d 1 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""ContentDeliveryAllowed"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""OemPreInstalledAppsEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""PreInstalledAppsEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""PreInstalledAppsEverEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SilentInstalledAppsEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""FeatureManagementEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SoftLandingEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""RemediationRequired"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContentEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Start Menu Ads/Suggestions")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SystemPaneSuggestionsEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""ShowSyncProviderNotifications"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""RotatingLockScreenEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""RotatingLockScreenOverlayEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-338387Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Allowing Suggested Apps In WindowsInk Workspace")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Microsoft\PolicyManager\default\WindowsInkWorkspace\AllowSuggestedAppsInWindowsInkWorkspace"" /v ""value"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Unnecessary components")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"set components=Printing-PrintToPDFServices-Features Printing-XPSServices-Features Xps-Foundation-Xps-Viewer
+(for %%a in (%components%) do ( 
+   PowerShell -Command "" disable-windowsoptionalfeature -online -featureName %%a -NoRestart "" >nul 2>nul
+))");
+                }
+
+                else if (item.ToString() == @"[Setting] Windows Defender Scheduled Scan from highest to normal privileges")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"" /RL LIMITED >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Process Mitigation")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"powershell.exe -command ""Set-ProcessMitigation -System -Disable CFG""" +
+                                  Environment.NewLine +
+                                  @"for /f ""tokens=3 skip=2"" %%i in ('reg query ""HKLM\System\CurrentControlSet\Control\Session Manager\kernel"" /v ""MitigationAuditOptions""') do set mitigation_mask=%%i" +
+                                  Environment.NewLine +
+                                  @"for /l %%i in (0,1,9) do set mitigation_mask=!mitigation_mask:%%i=2!" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\System\CurrentControlSet\Control\Session Manager\kernel"" /v ""MitigationOptions"" /t REG_BINARY /d ""!mitigation_mask!"" /f >nul 2>&1" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\System\CurrentControlSet\Control\Session Manager\kernel"" /v ""MitigationAuditOptions"" /t REG_BINARY /d ""!mitigation_mask!"" /f >nul 2>&1");
+                }
+
+                else if (item.ToString() == @"[Setting] Defragment Database Indexing Service File")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"net stop wsearch /y >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"esentutl /d C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows.edb >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"net start wsearch >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] SCHEDULED TASKS tweaks (Updates, Telemetry etc)")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\AppID\SmartScreenSpecific"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Application Experience\ProgramDataUpdater"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Application Experience\StartupAppTask"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Customer Experience Improvement Program\Consolidator"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Customer Experience Improvement Program\KernelCeipTask"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Customer Experience Improvement Program\UsbCeip"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\MemoryDiagnostic\ProcessMemoryDiagnosticEvent"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Customer Experience Improvement Program\Uploader"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Shell\FamilySafetyUpload"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\OfficeTelemetryAgentLogOn"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\OfficeTelemetryAgentFallBack"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""\Microsoft\Office\OfficeTelemetryAgentFallBack2016"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""\Microsoft\Office\OfficeTelemetryAgentLogOn2016"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\Office 15 Subscription Heartbeat"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\Windows Error Reporting\QueueReporting"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Windows\WindowsUpdate\Automatic App Update"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""NIUpdateServiceStartupTask"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""CCleaner Update"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""CCleanerSkipUAC - %username%"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Adobe Acrobat Update Task"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""AMDLinkUpdate"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\Office Automatic Updates 2.0"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\Office Feature Updates"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""Microsoft\Office\Office Feature Updates Logon"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""GoogleUpdateTaskMachineCore"" /Disable >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"schtasks /Change /TN ""GoogleUpdateTaskMachineUA"" /Disable >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Telemetry/Data Collection")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata"" /v PreventDeviceMetadataFromNetwork /t REG_DWORD /d 1 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection"" /v ""AllowTelemetry"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\Software\Policies\Microsoft\Windows\DataCollection"" /v ""AllowTelemetry"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\MRT"" /v DontOfferThroughWUAU /t REG_DWORD /d 1 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows"" /v ""CEIPEnable"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat"" /v ""AITEnable"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat"" /v ""DisableUAR"" /t REG_DWORD /d 1 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\AutoLogger-Diagtrack-Listener"" /v ""Start"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\SQMLogger"" /v ""Start"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\Software\Microsoft\Windows\CurrentVersion\Privacy"" /v ""TailoredExperiencesWithDiagnosticDataEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SYSTEM\ControlSet001\Control\WMI\Autologger\AutoLogger-Diagtrack-Listener"" /v ""Start"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SYSTEM\ControlSet001\Services\dmwappushservice"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKLM\SYSTEM\ControlSet001\Services\DiagTrack"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] PowerShell Telemetry")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"setx POWERSHELL_TELEMETRY_OPTOUT 1 >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Skype Telemetry")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW"" /v ""TraceLevelThreshold"" /t REG_DWORD /d ""0"" /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype"" /v ""EnableTracing"" /t REG_DWORD /d ""0"" /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW"" /v ""EnableTracing"" /t REG_DWORD /d ""0"" /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype"" /v ""WPPFilePath"" /t REG_SZ /d ""%%SYSTEMDRIVE%%\TEMP\Tracing\WPPMedia"" /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW"" /v ""WPPFilePath"" /t REG_SZ /d ""%%SYSTEMDRIVE%%\TEMP\WPPMedia"" /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Windows media player usage reports")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences"" /v ""UsageTracking"" /t REG_DWORD /d ""0"" /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Mozilla telemetry")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add HKLM\SOFTWARE\Policies\Mozilla\Firefox /v ""DisableTelemetry"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
+                }
+
             }
 
             var tweakFnishedCommand = Environment.NewLine + Environment.NewLine + @"exit /b 0";
             allScript.Add(tweakFnishedCommand);
-            var builder = new StringBuilder();
-            foreach (var command in allScript) builder.Append(command);
-            allScript.Add(builder.ToString());
-            var scripts = builder.ToString();
+            var builderTweaks = new StringBuilder();
+            foreach (var command in allScript) builderTweaks.Append(command);
+            allScript.Add(builderTweaks.ToString());
+            var scripts = builderTweaks.ToString();
 
             var executeBatLocation =
                 Environment.GetEnvironmentVariable("USERPROFILE") + @"\" + "Downloads\\windowsTweaks.bat";
@@ -683,6 +897,19 @@ exit 0)" + Environment.NewLine;
         #endregion
 
         #region Install
+        private void clb_installApplication_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked)
+            {
+                _tpInstallApplicationCount++;
+                lbl_install_count.Text = _tpInstallApplicationCount.ToString();
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                _tpInstallApplicationCount--;
+                lbl_install_count.Text = _tpInstallApplicationCount.ToString();
+            }
+        }
 
         private void cb_install_selectAll_CheckedChanged(object sender, EventArgs e)
         {
@@ -792,6 +1019,29 @@ exit 0)" + Environment.NewLine;
         #endregion
 
         #region Clear
+        private void clb_clear_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (e.NewValue == CheckState.Checked)
+            {
+                _tpClearCount++;
+                lbl_clear_count.Text = _tpClearCount.ToString();
+            }
+            else if (e.NewValue == CheckState.Unchecked)
+            {
+                _tpClearCount--;
+                lbl_clear_count.Text = _tpClearCount.ToString();
+            }
+        }
+
+        private void cb_clear_selectAll_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_clear_selectAll.Checked)
+                for (var i = 0; i < clb_clear.Items.Count; i++)
+                    clb_clear.SetItemChecked(i, true);
+            else
+                for (var i = 0; i < clb_clear.Items.Count; i++)
+                    clb_clear.SetItemChecked(i, false);
+        }
 
         private void ClearOptions()
         {

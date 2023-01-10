@@ -91,6 +91,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="README.md" />
     <None Include="Resources\clear_applicationHistory.bat" />
     <None Include="Resources\clear_browserHistory.bat" />
     <None Include="Resources\clear_credentialCache.bat" />

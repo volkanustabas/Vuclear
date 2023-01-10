@@ -598,6 +598,136 @@ exit 0)" + Environment.NewLine;
                                   @"reg add HKLM\SOFTWARE\Policies\Mozilla\Firefox /v ""DisableTelemetry"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
                 }
 
+                else if (item.ToString() == @"[Disable] Let apps use my advertising ID")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo"" /v Enabled /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Send Microsoft info about how I write")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Input\TIPC"" /v Enabled /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Handwriting recognition personalization")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization"" /v RestrictImplicitInkCollection /t REG_DWORD /d 1 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization"" /v RestrictImplicitTextCollection /t REG_DWORD /d 1 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Watson malware reports")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting"" /v ""DisableGenericReports"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Malware diagnostic data")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\MRT"" /v ""DontReportInfectionInformation"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Setting override for reporting to Microsoft MAPS")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""LocalSettingOverrideSpynetReporting"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Spynet Defender reporting")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""SpynetReporting"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Do not send malware samples for further analysis")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""SubmitSamplesConsent"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Sending speech, inking and typing samples to MS")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\Personalization\Settings"" /v AcceptedPrivacyPolicy /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Sending contacts to MS")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore"" /v HarvestContacts /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Disable] Cortana")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search"" /v ""AllowCortana"" /t REG_DWORD /d 0 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Remove] Windows Game Bar")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR"" /v ""AppCaptureEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\System\GameConfigStore"" /v ""GameDVR_Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"PowerShell -Command ""Get-AppxPackage *XboxGamingOverlay* | Remove-AppxPackage""" +
+                                  Environment.NewLine +
+                                  @"PowerShell -Command ""Get-AppxPackage *XboxGameOverlay* | Remove-AppxPackage""" +
+                                  Environment.NewLine +
+                                  @"PowerShell -Command ""Get-AppxPackage *XboxSpeechToTextOverlay* | Remove-AppxPackage""");
+                }
+
+                else if (item.ToString() == @"[Remove] News and Interests/Widgets")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"" /v EnableFeeds /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v TaskbarDa /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"winget uninstall ""windows web experience pack"" --accept-source-agreements >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Services to: Disable Mode")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"set toDisable=DiagTrack diagnosticshub.standardcollector.service dmwappushservice RemoteRegistry RemoteAccess SCardSvr SCPolicySvc fax WerSvc NvTelemetryContainer gadjservice AdobeARMservice PSI_SVC_2 lfsvc WalletService RetailDemo SEMgrSvc diagsvc AJRouter
+(for %%a in (%toDisable%) do ( 
+   sc stop %%a >nul 2>nul
+   sc config %%a start= disabled  >nul 2>nul
+))");
+                }
+
+                else if (item.ToString() == @"[Disable] Network Diagnostic Usage Service")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"reg add ""HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Ndu"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul");
+                }
+
+                else if (item.ToString() == @"[Setting] Services to: Manuall Mode")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"set toManuall=BITS SamSs TapiSrv seclogon wuauserv PhoneSvc lmhosts iphlpsvc gupdate gupdatem edgeupdate edgeupdatem MapsBroker PnkBstrA brave bravem asus asusm adobeupdateservice adobeflashplayerupdatesvc WSearch
+(for %%a in (%toManuall%) do ( 
+   sc config %%a start= demand >nul 2>nul
+))");
+                }
+
+                else if (item.ToString() == @"[Remove] Bloatware Apps")
+                {
+                    allScript.Add(Environment.NewLine +
+                                  @"set listofbloatware=3DBuilder Automate Appconnector Microsoft3DViewer MicrosoftPowerBIForWindows MicrosoftPowerBIForWindows Print3D XboxApp GetHelp WindowsFeedbackHub BingFoodAndDrink BingHealthAndFitness BingTravel WindowsReadingList MixedReality.Portal ScreenSketch YourPhone PicsArt-PhotoStudio EclipseManager PolarrPhotoEditorAcademicEdition Wunderlist LinkedInforWindows AutodeskSketchBook Twitter DisneyMagicKingdoms MarchofEmpires ActiproSoftwareLLC Plex iHeartRadio FarmVille2CountryEscape Duolingo CyberLinkMediaSuiteEssentials DolbyAccess DrawboardPDF FitbitCoach Flipboard Asphalt8Airborne Keeper BingNews COOKINGFEVER PandoraMediaInc CaesarsSlotsFreeCasino Shazam PhototasticCollage TuneInRadio WinZipUniversal XING RoyalRevolt2 CandyCrushSodaSaga BubbleWitch3Saga CandyCrushSaga Getstarted bing MicrosoftOfficeHub OneNote WindowsPhone SkypeApp windowscommunicationsapps WindowsMaps Sway CommsPhone ConnectivityStore Hotspot Sketchable Clipchamp Prime TikTok ToDo Family NewVoiceNote SamsungNotes SamsungFlux StudioPlus SamsungWelcome SamsungQuickSearch SamsungPCCleaner SamsungCloudBluetoothSync PCGallery OnlineSupportSService 
+(for %%a in (%listofbloatware%) do ( 
+	set /a insidecount+=1 >nul 2>nul
+	title %version% [%counter%/%alltodo%] [!insidecount!/79]
+   PowerShell -Command ""Get-AppxPackage -allusers *%%a* | Remove-AppxPackage""
+))
+
+set /a counter+=1 >nul 2>nul");
+                }
+
             }
 
             var tweakFnishedCommand = Environment.NewLine + Environment.NewLine + @"exit /b 0";

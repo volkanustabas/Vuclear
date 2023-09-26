@@ -319,7 +319,16 @@
             "ImageGlass",
             "Java Runtime Environment",
             "Libre Office",
+            "Microsoft .NET Runtime 3.1",
+            "Microsoft .NET Runtime 5.0",
+            "Microsoft .NET Runtime 6.0",
+            "Microsoft .NET Runtime 7.0",
+            "Microsoft .NET Windows Desktop Runtime 3.1",
+            "Microsoft .NET Windows Desktop Runtime 5.0",
+            "Microsoft .NET Windows Desktop Runtime 6.0",
+            "Microsoft .NET Windows Desktop Runtime 7.0",
             "Microsoft Edge",
+            "Microsoft Edge WebView2 Runtime",
             "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
             "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
             "Mozilla Firefox",
@@ -552,7 +561,7 @@
             this.MinimumSize = new System.Drawing.Size(680, 540);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Vuclear [v1.0.1.2]";
+            this.Text = "Vuclear";
             this.Load += new System.EventHandler(this.FrmMain_Load);
             this.tc_01.ResumeLayout(false);
             this.tp_info.ResumeLayout(false);

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
+using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
@@ -14,11 +15,11 @@ namespace Vuclear
     public partial class FrmMain : Form
     {
         private bool _tpClear;
-        private bool _tpInstallApplication;
-        private bool _tpWindowsTweaks;
         private int _tpClearCount;
-        private int _tpTweakCount;
+        private bool _tpInstallApplication;
         private int _tpInstallApplicationCount;
+        private int _tpTweakCount;
+        private bool _tpWindowsTweaks;
 
         public FrmMain()
         {
@@ -31,6 +32,7 @@ namespace Vuclear
         private void FrmMain_Load(object sender, EventArgs e)
         {
             InfoFillData();
+            Text = AssemblyTitle + @" [v" + AssemblyVersion + @"]";
         }
 
         private void EnabledFalse()
@@ -144,81 +146,63 @@ exit 0)" + Environment.NewLine;
             allScript.Add(tweakStartCommand);
 
             foreach (var item in clb_tweak_all.CheckedItems)
-            {
                 if (item.ToString() == "[Setting] Show file extensions in Explorer")
-                {
                     allScript.Add(Environment.NewLine +
-                               @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""HideFileExt"" /t  REG_DWORD /d 0 /f >nul 2>nul");
-                }
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""HideFileExt"" /t  REG_DWORD /d 0 /f >nul 2>nul");
 
                 else if (item.ToString() == @"[Setting] Disable Transparency in taskbar/menu start")
-                {
                     allScript.Add(Environment.NewLine +
-                               @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize"" /v ""EnableTransparency"" /t REG_DWORD /d 0 /f >nul 2>nul");
 
                 else if (item.ToString() == @"[Disable] Windows animations, menu Start animations")
-                {
                     allScript.Add(Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\Control Panel\Desktop"" /v UserPreferencesMask /t REG_BINARY /d 9012078010000000 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\Control Panel\Desktop\WindowMetrics"" /v MinAnimate /t REG_SZ /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\AnimateMinMax"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ControlAnimations"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
-                               Environment.NewLine +
-                               @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects"" /v VisualFXSetting  /t REG_DWORD /d 3 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\Control Panel\Desktop"" /v UserPreferencesMask /t REG_BINARY /d 9012078010000000 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\Control Panel\Desktop\WindowMetrics"" /v MinAnimate /t REG_SZ /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\AnimateMinMax"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ComboBoxAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\ControlAnimations"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\MenuAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TaskbarAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul" +
+                                  Environment.NewLine +
+                                  @"REG ADD ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects\TooltipAnimation"" /v DefaultApplied  /t REG_DWORD /d 0 /f >nul 2>nul");
 
                 else if (item.ToString() == @"[Disable] MRU lists (jump lists) of XAML apps in Start Menu")
-                {
                     allScript.Add(Environment.NewLine +
-                               @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""Start_TrackDocs"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
+                                  @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""Start_TrackDocs"" /t REG_DWORD /d 0 /f >nul 2>nul");
 
                 else if (item.ToString() == @"[Setting] Hide the search box from taskbar")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search"" /v ""SearchboxTaskbarMode"" /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Windows Explorer to start on This PC instead of Quick Access")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""LaunchTo"" /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Edge WebWidget")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"REG ADD ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge"" /v WebWidgetAllowed /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Power option to ultimate performance")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"powercfg -setactive scheme_min >nul 2>nul" +
                                   Environment.NewLine +
                                   @"powercfg -setactive e9a42b02-d5df-448d-aa00-03f14749eb61 >nul 2>nul" +
                                   Environment.NewLine +
                                   "powercfg /S ceb6bfc7-d55c-4d56-ae37-ff264aade12d >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Enable All (Logical) Cores (Boot Advanced Options)")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"wmic cpu get NumberOfLogicalProcessors | findstr /r ""[0-9]"" > NumLogicalCores.txt" +
                                   Environment.NewLine +
@@ -227,150 +211,106 @@ exit 0)" + Environment.NewLine;
                                   "bcdedit /set {current} numproc %NOLP% >nul 2>nul" +
                                   Environment.NewLine +
                                   @"if exist NumLogicalCores.txt del NumLogicalCores.txt");
-                }
 
                 else if (item.ToString() == @"[Setting] Dual boot timeout 3sec")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"bcdedit /set timeout 3 >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Hibernation/Fast startup in Windows")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"powercfg -hibernate off >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Windows Insider experiments")
-                {
                     allScript.Add(Environment.NewLine +
-                                  @"reg add ""HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\System"" /v ""AllowExperimentation"" /t REG_DWORD /d ""0"" /f >nul 2>nul"+
+                                  @"reg add ""HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\System"" /v ""AllowExperimentation"" /t REG_DWORD /d ""0"" /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Microsoft\PolicyManager\default\System\AllowExperimentation"" /v ""value"" /t ""REG_DWORD"" /d ""0"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] App launch tracking")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v ""Start_TrackProgs"" /d ""0"" /t REG_DWORD /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Powerthrottling (Intel 6gen and higher)")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling"" /v ""PowerThrottlingOff"" /t REG_DWORD /d ""1"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Turn Off Background Apps")
-                {
                     allScript.Add(Environment.NewLine +
-                                  @"REG ADD ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications"" /v GlobalUserDisabled  /t REG_DWORD /d 1 /f >nul 2>nul"+
+                                  @"REG ADD ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications"" /v GlobalUserDisabled  /t REG_DWORD /d 1 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"REG ADD ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search"" /v BackgroundAppGlobalToggle /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Sticky Keys prompt")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys"" /v ""Flags"" /t REG_SZ /d 506 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Activity History")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System"" /v ""PublishUserActivities"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Automatic Updates for Microsoft Store apps")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\WindowsStore"" /v ""AutoDownload"" /t REG_DWORD /d 2 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] SmartScreen Filter for Store Apps")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost"" /v EnableWebContentEvaluation /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Let websites provide locally")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\Control Panel\International\User Profile"" /v HttpAcceptLanguageOptOut /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Microsoft Edge settings for privacy")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main"" /v DoNotTrack /t REG_DWORD /d 1 /f >nul 2>nul" +
-                                  Environment.NewLine+
+                                  Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\User\Default\SearchScopes"" /v ShowSearchSuggestionsGlobal /t REG_DWORD /d 0 /f >nul 2>nul" +
-                                  Environment.NewLine+
+                                  Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\FlipAhead"" /v FPEnabled /t REG_DWORD /d 0 /f >nul 2>nul" +
-                                  Environment.NewLine+
+                                  Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\PhishingFilter"" /v EnabledV9 /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Sleep Mode Timeouts")
-                {
                     allScript.Add(Environment.NewLine +
-                                  @"powercfg /X standby-timeout-ac 0 >nul 2>nul"+
-                                  Environment.NewLine+
+                                  @"powercfg /X standby-timeout-ac 0 >nul 2>nul" +
+                                  Environment.NewLine +
                                   @"powercfg /X standby-timeout-dc 0 >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Spectre/Meltdown Protection")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"" /v FeatureSettingsOverride /t REG_DWORD /d 1 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management"" /v FeatureSettingsOverrideMask /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Location sensor")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Permissions\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}"" /v SensorPermissionState /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] WiFi Sense: HotSpot Sharing")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting"" /v value /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] WiFi Sense: Shared HotSpot Auto-Connect")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots"" /v value /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Windows Updates to Notify to schedule restart")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings"" /v UxOption /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] P2P Update downloads outside of local network")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config"" /v DODownloadMode /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Lower Shutdown time")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control"" /v ""WaitToKillServiceTimeout"" /t REG_SZ /d 2000 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Remove] Old Device Drivers")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"SET DEVMGR_SHOW_NONPRESENT_DEVICES=1");
-                }
 
                 else if (item.ToString() == @"[Disable] Get Even More Out of Windows Screen")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-310093Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -386,13 +326,11 @@ exit 0)" + Environment.NewLine;
                                   Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-338393Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
-                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-353698Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul"+
+                                  @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-353698Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement"" /v ""ScoobeSystemSettingEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Automatically installing suggested apps")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent"" /v ""DisableWindowsConsumerFeatures"" /t REG_DWORD /d 1 /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -413,10 +351,8 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""RemediationRequired"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContentEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Start Menu Ads/Suggestions")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SystemPaneSuggestionsEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -427,31 +363,24 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""RotatingLockScreenOverlayEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager"" /v ""SubscribedContent-338387Enabled"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Allowing Suggested Apps In WindowsInk Workspace")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Microsoft\PolicyManager\default\WindowsInkWorkspace\AllowSuggestedAppsInWindowsInkWorkspace"" /v ""value"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Unnecessary components")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"set components=Printing-PrintToPDFServices-Features Printing-XPSServices-Features Xps-Foundation-Xps-Viewer
 (for %%a in (%components%) do ( 
    PowerShell -Command "" disable-windowsoptionalfeature -online -featureName %%a -NoRestart "" >nul 2>nul
 ))");
-                }
 
-                else if (item.ToString() == @"[Setting] Windows Defender Scheduled Scan from highest to normal privileges")
-                {
+                else if (item.ToString() ==
+                         @"[Setting] Windows Defender Scheduled Scan from highest to normal privileges")
                     allScript.Add(Environment.NewLine +
                                   @"schtasks /Change /TN ""Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"" /RL LIMITED >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Process Mitigation")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"powershell.exe -command ""Set-ProcessMitigation -System -Disable CFG""" +
                                   Environment.NewLine +
@@ -462,20 +391,16 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKLM\System\CurrentControlSet\Control\Session Manager\kernel"" /v ""MitigationOptions"" /t REG_BINARY /d ""!mitigation_mask!"" /f >nul 2>&1" +
                                   Environment.NewLine +
                                   @"reg add ""HKLM\System\CurrentControlSet\Control\Session Manager\kernel"" /v ""MitigationAuditOptions"" /t REG_BINARY /d ""!mitigation_mask!"" /f >nul 2>&1");
-                }
 
                 else if (item.ToString() == @"[Setting] Defragment Database Indexing Service File")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"net stop wsearch /y >nul 2>nul" +
                                   Environment.NewLine +
                                   @"esentutl /d C:\ProgramData\Microsoft\Search\Data\Applications\Windows\Windows.edb >nul 2>nul" +
                                   Environment.NewLine +
                                   @"net start wsearch >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] SCHEDULED TASKS tweaks (Updates, Telemetry etc)")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"schtasks /Change /TN ""Microsoft\Windows\AppID\SmartScreenSpecific"" /Disable >nul 2>nul" +
                                   Environment.NewLine +
@@ -534,10 +459,8 @@ exit 0)" + Environment.NewLine;
                                   @"schtasks /Change /TN ""GoogleUpdateTaskMachineCore"" /Disable >nul 2>nul" +
                                   Environment.NewLine +
                                   @"schtasks /Change /TN ""GoogleUpdateTaskMachineUA"" /Disable >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Telemetry/Data Collection")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata"" /v PreventDeviceMetadataFromNetwork /t REG_DWORD /d 1 /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -564,16 +487,12 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKLM\SYSTEM\ControlSet001\Services\dmwappushservice"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKLM\SYSTEM\ControlSet001\Services\DiagTrack"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] PowerShell Telemetry")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"setx POWERSHELL_TELEMETRY_OPTOUT 1 >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Skype Telemetry")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW"" /v ""TraceLevelThreshold"" /t REG_DWORD /d ""0"" /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -584,90 +503,62 @@ exit 0)" + Environment.NewLine;
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype"" /v ""WPPFilePath"" /t REG_SZ /d ""%%SYSTEMDRIVE%%\TEMP\Tracing\WPPMedia"" /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Tracing\WPPMediaPerApp\Skype\ETW"" /v ""WPPFilePath"" /t REG_SZ /d ""%%SYSTEMDRIVE%%\TEMP\WPPMedia"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Windows media player usage reports")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences"" /v ""UsageTracking"" /t REG_DWORD /d ""0"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Mozilla telemetry")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add HKLM\SOFTWARE\Policies\Mozilla\Firefox /v ""DisableTelemetry"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Let apps use my advertising ID")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo"" /v Enabled /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Send Microsoft info about how I write")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Input\TIPC"" /v Enabled /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Handwriting recognition personalization")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization"" /v RestrictImplicitInkCollection /t REG_DWORD /d 1 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization"" /v RestrictImplicitTextCollection /t REG_DWORD /d 1 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Watson malware reports")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Reporting"" /v ""DisableGenericReports"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Malware diagnostic data")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\MRT"" /v ""DontReportInfectionInformation"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Setting override for reporting to Microsoft MAPS")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""LocalSettingOverrideSpynetReporting"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Spynet Defender reporting")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""SpynetReporting"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Do not send malware samples for further analysis")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Spynet"" /v ""SubmitSamplesConsent"" /t REG_DWORD /d ""2"" /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Sending speech, inking and typing samples to MS")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\Personalization\Settings"" /v AcceptedPrivacyPolicy /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Sending contacts to MS")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKCU\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore"" /v HarvestContacts /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Disable] Cortana")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Search"" /v ""AllowCortana"" /t REG_DWORD /d 0 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Remove] Windows Game Bar")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR"" /v ""AppCaptureEnabled"" /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
@@ -678,45 +569,35 @@ exit 0)" + Environment.NewLine;
                                   @"PowerShell -Command ""Get-AppxPackage *XboxGameOverlay* | Remove-AppxPackage""" +
                                   Environment.NewLine +
                                   @"PowerShell -Command ""Get-AppxPackage *XboxSpeechToTextOverlay* | Remove-AppxPackage""");
-                }
 
                 else if (item.ToString() == @"[Remove] News and Interests/Widgets")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"" /v EnableFeeds /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"reg add ""HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"" /v TaskbarDa /t REG_DWORD /d 0 /f >nul 2>nul" +
                                   Environment.NewLine +
                                   @"winget uninstall ""windows web experience pack"" --accept-source-agreements >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Services to: Disable Mode")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"set toDisable=DiagTrack diagnosticshub.standardcollector.service dmwappushservice RemoteRegistry RemoteAccess SCardSvr SCPolicySvc fax WerSvc NvTelemetryContainer gadjservice AdobeARMservice PSI_SVC_2 lfsvc WalletService RetailDemo SEMgrSvc diagsvc AJRouter
 (for %%a in (%toDisable%) do ( 
    sc stop %%a >nul 2>nul
    sc config %%a start= disabled  >nul 2>nul
 ))");
-                }
 
                 else if (item.ToString() == @"[Disable] Network Diagnostic Usage Service")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"reg add ""HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\Ndu"" /v ""Start"" /t REG_DWORD /d 4 /f >nul 2>nul");
-                }
 
                 else if (item.ToString() == @"[Setting] Services to: Manuall Mode")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"set toManuall=BITS SamSs TapiSrv seclogon wuauserv PhoneSvc lmhosts iphlpsvc gupdate gupdatem edgeupdate edgeupdatem MapsBroker PnkBstrA brave bravem asus asusm adobeupdateservice adobeflashplayerupdatesvc WSearch
 (for %%a in (%toManuall%) do ( 
    sc config %%a start= demand >nul 2>nul
 ))");
-                }
 
                 else if (item.ToString() == @"[Remove] Bloatware Apps")
-                {
                     allScript.Add(Environment.NewLine +
                                   @"set listofbloatware=3DBuilder Automate Appconnector Microsoft3DViewer MicrosoftPowerBIForWindows MicrosoftPowerBIForWindows Print3D XboxApp GetHelp WindowsFeedbackHub BingFoodAndDrink BingHealthAndFitness BingTravel WindowsReadingList MixedReality.Portal ScreenSketch YourPhone PicsArt-PhotoStudio EclipseManager PolarrPhotoEditorAcademicEdition Wunderlist LinkedInforWindows AutodeskSketchBook Twitter DisneyMagicKingdoms MarchofEmpires ActiproSoftwareLLC Plex iHeartRadio FarmVille2CountryEscape Duolingo CyberLinkMediaSuiteEssentials DolbyAccess DrawboardPDF FitbitCoach Flipboard Asphalt8Airborne Keeper BingNews COOKINGFEVER PandoraMediaInc CaesarsSlotsFreeCasino Shazam PhototasticCollage TuneInRadio WinZipUniversal XING RoyalRevolt2 CandyCrushSodaSaga BubbleWitch3Saga CandyCrushSaga Getstarted bing MicrosoftOfficeHub OneNote WindowsPhone SkypeApp windowscommunicationsapps WindowsMaps Sway CommsPhone ConnectivityStore Hotspot Sketchable Clipchamp Prime TikTok ToDo Family NewVoiceNote SamsungNotes SamsungFlux StudioPlus SamsungWelcome SamsungQuickSearch SamsungPCCleaner SamsungCloudBluetoothSync PCGallery OnlineSupportSService 
 (for %%a in (%listofbloatware%) do ( 
@@ -726,9 +607,6 @@ exit 0)" + Environment.NewLine;
 ))
 
 set /a counter+=1 >nul 2>nul");
-                }
-
-            }
 
             var tweakFnishedCommand = Environment.NewLine + Environment.NewLine + @"exit /b 0";
             allScript.Add(tweakFnishedCommand);
@@ -754,7 +632,7 @@ set /a counter+=1 >nul 2>nul");
                 Verb = "runas"
             };
 
-            var p = new Process {StartInfo = processStartInfo};
+            var p = new Process { StartInfo = processStartInfo };
             p.Start();
             var result = p.StandardOutput.ReadToEnd();
             rtb_log.AppendText(result + Environment.NewLine);
@@ -814,12 +692,12 @@ set /a counter+=1 >nul 2>nul");
                 var collection = mSearcher.Get();
                 foreach (var o in collection)
                 {
-                    var obj = (ManagementObject) o;
-                    var releaseDt = (string) obj["ReleaseDate"];
+                    var obj = (ManagementObject)o;
+                    var releaseDt = (string)obj["ReleaseDate"];
                     var dt = ManagementDateTimeConverter.ToDateTime(releaseDt);
                     var biosDateConvert = dt.ToString("yyyy.MM.dd");
 
-                    var biosDetail = @"v" + (string) obj["SMBIOSBIOSVersion"] + @" - " + biosDateConvert;
+                    var biosDetail = @"v" + (string)obj["SMBIOSBIOSVersion"] + @" - " + biosDateConvert;
 
                     return biosDetail;
                 }
@@ -869,7 +747,7 @@ set /a counter+=1 >nul 2>nul");
 
                 foreach (var o in searcher.Get())
                 {
-                    var queryObj = (ManagementObject) o;
+                    var queryObj = (ManagementObject)o;
                     var os = queryObj["Caption"] + @" " + queryObj["BuildNumber"];
                     return os;
                 }
@@ -903,7 +781,7 @@ set /a counter+=1 >nul 2>nul");
 
                 foreach (var o in searcher.Get())
                 {
-                    var queryObj = (ManagementObject) o;
+                    var queryObj = (ManagementObject)o;
                     var brandModelName = queryObj["Manufacturer"] + @" / " + queryObj["Model"];
 
 
@@ -939,7 +817,7 @@ set /a counter+=1 >nul 2>nul");
 
                 foreach (var o in searcher.Get())
                 {
-                    var queryObj = (ManagementObject) o;
+                    var queryObj = (ManagementObject)o;
                     var processorModel = queryObj["Name"].ToString();
 
                     return processorModel;
@@ -974,13 +852,13 @@ set /a counter+=1 >nul 2>nul");
 
                 foreach (var o in searcher.Get())
                 {
-                    var queryObj = (ManagementObject) o;
+                    var queryObj = (ManagementObject)o;
                     ulong totalMemory = 0;
                     foreach (var managementBaseObject in searcher.Get())
                     {
-                        var m = (ManagementObject) managementBaseObject;
+                        var m = (ManagementObject)managementBaseObject;
                         if (m["Capacity"] != null)
-                            totalMemory += (ulong) m["Capacity"];
+                            totalMemory += (ulong)m["Capacity"];
                     }
 
                     var ramInfo = KbMbGbTbConvert.ByteToStringForInfo(totalMemory) + @" (" +
@@ -1005,7 +883,7 @@ set /a counter+=1 >nul 2>nul");
         {
             public static string ByteToString(ulong bytes)
             {
-                string[] suffix = {"bytes", "KB", "GB", "TB"};
+                string[] suffix = { "bytes", "KB", "GB", "TB" };
                 int i;
                 double dblSByte = bytes;
                 for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
@@ -1015,7 +893,7 @@ set /a counter+=1 >nul 2>nul");
 
             public static string ByteToStringForInfo(ulong bytes)
             {
-                string[] suffix = {"bytes", "KB", "MB", "GB", "TB"};
+                string[] suffix = { "bytes", "KB", "MB", "GB", "TB" };
                 int i;
                 double dblSByte = bytes;
                 for (i = 0; i < suffix.Length && bytes >= 1024; i++, bytes /= 1024) dblSByte = bytes / 1024.0;
@@ -1027,6 +905,7 @@ set /a counter+=1 >nul 2>nul");
         #endregion
 
         #region Install
+
         private void clb_installApplication_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (e.NewValue == CheckState.Checked)
@@ -1144,11 +1023,66 @@ set /a counter+=1 >nul 2>nul");
                     var installJavaRuntime = @"winget install -e --id Oracle.JavaRuntimeEnvironment";
                     ExecuteCommand(installJavaRuntime, "Java Runtime Environment installed.", rtb_log);
                 }
+
+                else if (item.ToString() == @"Microsoft .NET Runtime 3.1")
+                {
+                    var installMicrosoftNetRuntime31 = @"winget install -e --id Microsoft.DotNet.Runtime.3_1";
+                    ExecuteCommand(installMicrosoftNetRuntime31, "Microsoft .NET Runtime 3.1 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Runtime 5")
+                {
+                    var installMicrosoftNetRuntime5 = @"winget install -e --id Microsoft.DotNet.Runtime.5";
+                    ExecuteCommand(installMicrosoftNetRuntime5, "Microsoft .NET Runtime 5 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Runtime 6")
+                {
+                    var installMicrosoftNetRuntime6 = @"winget install -e --id Microsoft.DotNet.Runtime.6";
+                    ExecuteCommand(installMicrosoftNetRuntime6, "Microsoft .NET Runtime 6 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Runtime 7")
+                {
+                    var installMicrosoftNetRuntime7 = @"winget install -e --id Microsoft.DotNet.Runtime.7";
+                    ExecuteCommand(installMicrosoftNetRuntime7, "Microsoft .NET Runtime 7 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Windows Desktop Runtime 3.1")
+                {
+                    var installMicrosoftNetWindowsDesktopRuntime31 = @"winget install -e --id Microsoft.DotNet.DesktopRuntime.3_1";
+                    ExecuteCommand(installMicrosoftNetWindowsDesktopRuntime31, "Microsoft .NET Windows Desktop Runtime 3.1 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Windows Desktop Runtime 5.0")
+                {
+                    var installMicrosoftNetWindowsDesktopRuntime5 = @"winget install -e --id Microsoft.DotNet.DesktopRuntime.5";
+                    ExecuteCommand(installMicrosoftNetWindowsDesktopRuntime5, "Microsoft .NET Windows Desktop Runtime 5.0 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Windows Desktop Runtime 6.0")
+                {
+                    var installMicrosoftNetWindowsDesktopRuntime6 = @"winget install -e --id Microsoft.DotNet.DesktopRuntime.6";
+                    ExecuteCommand(installMicrosoftNetWindowsDesktopRuntime6, "Microsoft .NET Windows Desktop Runtime 6.0 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft .NET Windows Desktop Runtime 7.0")
+                {
+                    var installMicrosoftNetWindowsDesktopRuntime7 = @"winget install -e --id Microsoft.DotNet.DesktopRuntime.7";
+                    ExecuteCommand(installMicrosoftNetWindowsDesktopRuntime7, "Microsoft .NET Windows Desktop Runtime 7.0 installed.", rtb_log);
+                }
+
+                else if (item.ToString() == @"Microsoft Edge WebView2 Runtime")
+                {
+                    var installMicrosoftEdgeWebView2Runtime = @"winget install -e --id Microsoft.EdgeWebView2Runtime";
+                    ExecuteCommand(installMicrosoftEdgeWebView2Runtime, "Microsoft Edge WebView2 Runtime installed.", rtb_log);
+                }
         }
 
         #endregion
 
         #region Clear
+
         private void clb_clear_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (e.NewValue == CheckState.Checked)
@@ -1322,5 +1256,26 @@ set /a counter+=1 >nul 2>nul");
 
         #endregion
 
+        #region AssemblyDetail
+
+        public static string AssemblyTitle
+        {
+            get
+            {
+                var attributes = Assembly.GetExecutingAssembly()
+                    .GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    var titleAttribute = (AssemblyTitleAttribute)attributes[0];
+                    if (titleAttribute.Title != "") return titleAttribute.Title;
+                }
+
+                return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+            }
+        }
+
+        public static string AssemblyVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+        #endregion
     }
 }
